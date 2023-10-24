@@ -9,7 +9,7 @@ numpy = "~=1.25"
 python-dotenv = "~=1.0"
 
 [dev-packages]
-black = "~=23.7"
+black = "~=23.10"
 isort = "~=5.12"
 mypy = "~=1.4"
 flake8 = "~=6.0"
