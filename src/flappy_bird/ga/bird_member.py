@@ -62,12 +62,12 @@ class BirdMember(Member):
 
     @property
     def chromosome(self) -> tuple[list[Matrix], list[Matrix]]:
-        return self._nn.weights[1:], self._nn.bias[1:]
+        return self._nn.weights, self._nn.bias
 
     @chromosome.setter
     def chromosome(self, new_chromosome: tuple[list[Matrix], list[Matrix]]) -> None:
-        self._nn.weights[1:] = new_chromosome[0]
-        self._nn.bias[1:] = new_chromosome[1]
+        self._nn.weights = new_chromosome[0]
+        self._nn.bias = new_chromosome[1]
 
     @property
     def fitness(self) -> int:
