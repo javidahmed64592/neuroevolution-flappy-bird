@@ -11,6 +11,8 @@ from numpy.typing import NDArray
 
 from flappy_bird.objects.pipe import Pipe
 
+rng = np.random.default_rng()
+
 
 class Bird(Member):
     """
@@ -65,7 +67,7 @@ class Bird(Member):
 
         self._score = 0
         self._alive = True
-        self._colour = np.random.randint(low=0, high=256, size=3)
+        self._colour = rng.integers(low=0, high=256, size=3)
 
     @property
     def neural_network(self) -> NeuralNetwork:

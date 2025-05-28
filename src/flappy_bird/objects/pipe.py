@@ -3,6 +3,8 @@ from typing import ClassVar
 import numpy as np
 import pygame
 
+rng = np.random.default_rng()
+
 
 class Pipe:
     """
@@ -34,7 +36,7 @@ class Pipe:
             speed (float): Pipe movement speed
         """
         self._x = self.X_LIM
-        self._top_height = np.random.uniform(low=self.SPACING, high=(self.Y_LIM - self.SPACING - self.SPACING))
+        self._top_height = rng.uniform(low=self.SPACING, high=(self.Y_LIM - self.SPACING - self.SPACING))
         self._bottom_height = self.Y_LIM - self._top_height + self.SPACING
         self._speed = speed
 
@@ -91,8 +93,7 @@ class Pipe:
         Returns:
             speed (float): Pipe speed
         """
-        speed = min(Pipe.START_SPEED + (pipes_spawned * Pipe.ACC_SPEED), Pipe.MAX_SPEED)
-        return speed
+        return min(Pipe.START_SPEED + (pipes_spawned * Pipe.ACC_SPEED), Pipe.MAX_SPEED)
 
     @staticmethod
     def get_spawn_time(pipes_spawned: int) -> float:
@@ -105,5 +106,4 @@ class Pipe:
         Returns:
             spawn_time (float): Time until Pipe spawns
         """
-        spawn_time = max(Pipe.START_SPAWNTIME - (pipes_spawned * Pipe.ACC_SPAWNTIME), Pipe.MIN_SPAWNTIME)
-        return spawn_time
+        return max(Pipe.START_SPAWNTIME - (pipes_spawned * Pipe.ACC_SPAWNTIME), Pipe.MIN_SPAWNTIME)

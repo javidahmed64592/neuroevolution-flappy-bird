@@ -76,8 +76,7 @@ class FlappyBirdApp(App):
         Bird.Y_LIM = height
         Pipe.X_LIM = width
         Pipe.Y_LIM = height
-        fba = cast(FlappyBirdApp, super().create_app(name, width, height, fps, font, font_size))
-        return fba
+        return cast(FlappyBirdApp, super().create_app(name, width, height, fps, font, font_size))
 
     def _write_stats(self) -> None:
         """
