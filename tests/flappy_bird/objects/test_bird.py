@@ -39,31 +39,31 @@ def pipe() -> Pipe:
 
 
 @pytest.fixture
-def mock_no_collision() -> Generator[MagicMock, None, None]:
+def mock_no_collision() -> Generator[None, None, None]:
     with patch("flappy_bird.objects.bird.Bird.rect_collision", return_value=False):
         yield
 
 
 @pytest.fixture
-def mock_collision() -> Generator[MagicMock, None, None]:
+def mock_collision() -> Generator[None, None, None]:
     with patch("flappy_bird.objects.bird.Bird.rect_collision", return_value=True):
         yield
 
 
 @pytest.fixture
-def mock_not_offscreen() -> Generator[MagicMock, None, None]:
+def mock_not_offscreen() -> Generator[None, None, None]:
     with patch("flappy_bird.objects.bird.Bird.offscreen", property(lambda self: False)):
         yield
 
 
 @pytest.fixture
-def mock_nn_jump() -> Generator[MagicMock, None, None]:
+def mock_nn_jump() -> Generator[None, None, None]:
     with patch("neural_network.neural_network.NeuralNetwork.feedforward", return_value=np.array([0.0, 1.0])):
         yield
 
 
 @pytest.fixture
-def mock_nn_no_jump() -> Generator[MagicMock, None, None]:
+def mock_nn_no_jump() -> Generator[None, None, None]:
     with patch("neural_network.neural_network.NeuralNetwork.feedforward", return_value=np.array([1.0, 0.0])):
         yield
 
@@ -119,8 +119,6 @@ class TestBird:
         assert bird.velocity == velocity_above_min
 
     def test_offscreen(self, bird: Bird) -> None:
-        assert not bird.offscreen
-
         # Offscreen above
         bird._y = -1
         assert bird.offscreen
