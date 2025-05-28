@@ -94,7 +94,7 @@ class Bird(Member):
             _nn_input[2] = self._closest_pipe._top_height / self.Y_LIM
             _nn_input[3] = self._closest_pipe._bottom_height / self.Y_LIM
             _nn_input[4] = self._closest_pipe._x / self.X_LIM
-        return np.expand_dims(_nn_input, axis=1)
+        return _nn_input
 
     @property
     def chromosome(self) -> list[list[Matrix]]:
@@ -159,13 +159,24 @@ class Bird(Member):
             parent_b (Member): Used to construct new chromosome
             mutation_rate (int): Probability for mutations to occur
         """
+
+        def crossover_weights(element: float, other_element: float, roll: float) -> float:
+            if roll < mutation_rate:
+                return rng.uniform(low=self._weights_range[0], high=self._weights_range[1])
+
+            return rng.choice([element, other_element], p=[0.5, 0.5])
+
+        def crossover_biases(element: float, other_element: float, roll: float) -> float:
+            if roll < mutation_rate:
+                return rng.uniform(low=self._bias_range[0], high=self._bias_range[1])
+
+            return rng.choice([element, other_element], p=[0.5, 0.5])
+
         self._new_chromosome = self.neural_network.crossover(
-            parent_a.neural_network, parent_b.neural_network, mutation_rate
-        )
-        self._colour = np.average(
-            [self._colour, parent_a._colour, parent_b._colour],
-            axis=0,
-            weights=[0.998, 0.001, 0.001],
+            parent_a.neural_network,
+            parent_b.neural_network,
+            crossover_weights,
+            crossover_biases,
         )
 
     def reset(self) -> None:
