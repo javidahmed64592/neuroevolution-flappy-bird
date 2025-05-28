@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import cast
 
-from flappy_bird.flappy_bird_ga import FlappyBirdGA
+from flappy_bird.ga.bird_ga import FlappyBirdGA
 from flappy_bird.objects.bird import Bird
 from flappy_bird.objects.pipe import Pipe
 from flappy_bird.pg.app import App
