@@ -61,17 +61,26 @@ class BirdMember(Member):
         return np.zeros(5)
 
     @property
-    def chromosome(self) -> list[list[Matrix]]:
-        return [self._nn.weights, self._nn.bias]
+    def chromosome(self) -> tuple[list[Matrix], list[Matrix]]:
+        return self._nn.weights[1:], self._nn.bias[1:]
 
     @chromosome.setter
-    def chromosome(self, new_chromosome: list[list[Matrix]]) -> None:
-        self._nn.weights = new_chromosome[0]
-        self._nn.bias = new_chromosome[1]
+    def chromosome(self, new_chromosome: tuple[list[Matrix], list[Matrix]]) -> None:
+        self._nn.weights[1:] = new_chromosome[0]
+        self._nn.bias[1:] = new_chromosome[1]
 
     @property
     def fitness(self) -> int:
         return self._score**2
+
+    @staticmethod
+    def crossover_genes(
+        element: float, other_element: float, roll: float, mutation_rate: float, random_range: tuple[float, float]
+    ) -> float:
+        if roll < mutation_rate:
+            return rng.uniform(low=random_range[0], high=random_range[1])
+
+        return float(rng.choice([element, other_element], p=[0.5, 0.5]))
 
     def crossover(self, parent_a: BirdMember, parent_b: BirdMember, mutation_rate: int) -> None:
         """
@@ -83,19 +92,11 @@ class BirdMember(Member):
             mutation_rate (int): Probability for mutations to occur
         """
 
-        def crossover_genes(
-            element: float, other_element: float, roll: float, random_range: tuple[float, float]
-        ) -> float:
-            if roll < mutation_rate:
-                return rng.uniform(low=random_range[0], high=random_range[1])
-
-            return float(rng.choice([element, other_element], p=[0.5, 0.5]))
-
         def crossover_weights(element: float, other_element: float, roll: float) -> float:
-            return crossover_genes(element, other_element, roll, self._weights_range)
+            return BirdMember.crossover_genes(element, other_element, roll, mutation_rate, self._weights_range)
 
         def crossover_biases(element: float, other_element: float, roll: float) -> float:
-            return crossover_genes(element, other_element, roll, self._bias_range)
+            return BirdMember.crossover_genes(element, other_element, roll, mutation_rate, self._bias_range)
 
         self._new_chromosome = NeuralNetwork.crossover(
             parent_a._nn,
