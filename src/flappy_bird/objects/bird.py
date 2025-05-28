@@ -98,7 +98,21 @@ class Bird(BirdMember):
         """
         if not self._closest_pipe:
             return False
-        return self.rect.colliderect(self._closest_pipe.rects[0]) or self.rect.colliderect(self._closest_pipe.rects[1])
+        return Bird.rect_collision(self.rect, self._closest_pipe.rects)
+
+    @staticmethod
+    def rect_collision(bird_rect: pygame.Rect, pipe_rects: list[pygame.Rect]) -> bool:
+        """
+        Check if Bird collides with any Pipe.
+
+        Parameters:
+            bird_rect (Rect): Bird's rectangle
+            pipe_rects (list[Rect]): List of Pipe rectangles
+
+        Returns:
+            (bool): Is Bird colliding with Pipe?
+        """
+        return any(bird_rect.colliderect(pipe_rect) for pipe_rect in pipe_rects)
 
     def _jump(self) -> None:
         """
