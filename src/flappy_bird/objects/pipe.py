@@ -3,6 +3,8 @@ from typing import ClassVar
 import numpy as np
 import pygame
 
+rng = np.random.default_rng()
+
 
 class Pipe:
     """
@@ -23,25 +25,23 @@ class Pipe:
     MIN_SPAWNTIME = 50
     ACC_SPAWNTIME = 2
     COLOUR: ClassVar = [0, 200, 0]
-    X_LIM: float
-    Y_LIM: float
 
-    def __init__(self, speed: float) -> None:
+    def __init__(self, x_lim: int, y_lim: int, speed: float) -> None:
         """
         Initialise Pipe with speed to move across the screen.
 
         Parameters:
             speed (float): Pipe movement speed
         """
-        self._x = self.X_LIM
-        self._top_height = np.random.uniform(low=self.SPACING, high=(self.Y_LIM - self.SPACING - self.SPACING))
-        self._bottom_height = self.Y_LIM - self._top_height + self.SPACING
+        self._x: float = x_lim
+        self._top_height = rng.uniform(low=Pipe.SPACING, high=(y_lim - (2 * Pipe.SPACING)))
+        self._bottom_height = y_lim - self._top_height + Pipe.SPACING
         self._speed = speed
 
     @property
     def rects(self) -> list[pygame.Rect]:
-        _top_pipe = pygame.Rect(self.top_pos[0], self.top_pos[1], self.WIDTH, self._top_height)
-        _bottom_pipe = pygame.Rect(self.bottom_pos[0], self.bottom_pos[1], self.WIDTH, self._bottom_height)
+        _top_pipe = pygame.Rect(self.top_pos[0], self.top_pos[1], Pipe.WIDTH, self._top_height)
+        _bottom_pipe = pygame.Rect(self.bottom_pos[0], self.bottom_pos[1], Pipe.WIDTH, self._bottom_height)
         return [_top_pipe, _bottom_pipe]
 
     @property
@@ -50,15 +50,15 @@ class Pipe:
 
     @property
     def bottom_pos(self) -> list[float]:
-        return [self._x, self._top_height + self.SPACING]
+        return [self._x, self._top_height + Pipe.SPACING]
 
     @property
     def offscreen(self) -> bool:
-        return self._x < -self.WIDTH
+        return self._x <= -Pipe.WIDTH
 
     @property
     def normalised_speed(self) -> float:
-        return self._speed / self.MAX_SPEED
+        return self._speed / Pipe.MAX_SPEED
 
     def draw(self, screen: pygame.Surface) -> None:
         """
@@ -69,8 +69,8 @@ class Pipe:
         """
         if self.offscreen:
             return
-        pygame.draw.rect(screen, self.COLOUR, self.rects[0])
-        pygame.draw.rect(screen, self.COLOUR, self.rects[1])
+        pygame.draw.rect(screen, Pipe.COLOUR, self.rects[0])
+        pygame.draw.rect(screen, Pipe.COLOUR, self.rects[1])
 
     def update(self) -> None:
         """
@@ -91,8 +91,7 @@ class Pipe:
         Returns:
             speed (float): Pipe speed
         """
-        speed = min(Pipe.START_SPEED + (pipes_spawned * Pipe.ACC_SPEED), Pipe.MAX_SPEED)
-        return speed
+        return min(Pipe.START_SPEED + (pipes_spawned * Pipe.ACC_SPEED), Pipe.MAX_SPEED)
 
     @staticmethod
     def get_spawn_time(pipes_spawned: int) -> float:
@@ -105,5 +104,4 @@ class Pipe:
         Returns:
             spawn_time (float): Time until Pipe spawns
         """
-        spawn_time = max(Pipe.START_SPAWNTIME - (pipes_spawned * Pipe.ACC_SPAWNTIME), Pipe.MIN_SPAWNTIME)
-        return spawn_time
+        return max(Pipe.START_SPAWNTIME - (pipes_spawned * Pipe.ACC_SPAWNTIME), Pipe.MIN_SPAWNTIME)

@@ -15,7 +15,6 @@ class FlappyBirdGA(GeneticAlgorithm):
         self,
         birds: list[Bird],
         mutation_rate: float,
-        shift_vals: float,
     ) -> None:
         """
         Initialise FlappyBirdGA with a mutation rate.
@@ -23,15 +22,13 @@ class FlappyBirdGA(GeneticAlgorithm):
         Parameters:
             birds (list[Bird]): Population of Birds
             mutation_rate (float): Population mutation rate
-            shift_vals (float): Values to shift weights and biases by
         """
         super().__init__(birds, mutation_rate)
         self._lifetime: int
-        self._shift_vals = shift_vals
 
     @property
     def num_alive(self) -> int:
-        _alive_array = np.array([_bird._alive for _bird in self._population._population])
+        _alive_array = np.array([_bird._alive for _bird in self._population._members])
         return int(np.sum(_alive_array))
 
     @classmethod
@@ -42,11 +39,12 @@ class FlappyBirdGA(GeneticAlgorithm):
         lifetime: int,
         x: int,
         y: int,
+        x_lim: int,
+        y_lim: int,
         size: int,
         hidden_layer_sizes: list[int],
-        weights_range: list[float],
-        bias_range: list[float],
-        shift_vals: float,
+        weights_range: tuple[float, float],
+        bias_range: tuple[float, float],
     ) -> FlappyBirdGA:
         """
         Create genetic algorithm and configure neural network.
@@ -57,19 +55,22 @@ class FlappyBirdGA(GeneticAlgorithm):
             lifetime (int): Time of each generation in seconds
             x (int): x coordinate of Bird's start position
             y (int): y coordinate of Bird's start position
+            x_lim (int): Screen width
+            y_lim (int): Screen height
             size (int): Size of Bird
             hidden_layer_sizes (list[int]): Neural network hidden layer sizes
-            weights_range (list[float]): Range for random weights
-            bias_range (list[float]): Range for random bias
-            shift_vals (float): Values to shift weights and biases by
+            weights_range (tuple[float, float]): Range for random weights
+            bias_range (tuple[float, float]): Range for random bias
 
         Returns:
             flappy_bird (FlappyBirdGA): Flappy Bird app
         """
         flappy_bird = cls(
-            [Bird(x, y, size, hidden_layer_sizes, weights_range, bias_range) for _ in range(population_size)],
+            [
+                Bird(x, y, x_lim, y_lim, size, hidden_layer_sizes, weights_range, bias_range)
+                for _ in range(population_size)
+            ],
             mutation_rate,
-            shift_vals,
         )
         flappy_bird._lifetime = lifetime
         return flappy_bird
@@ -78,12 +79,5 @@ class FlappyBirdGA(GeneticAlgorithm):
         """
         Reset all Birds.
         """
-        for _bird in self._population._population:
+        for _bird in self._population._members:
             _bird.reset()
-
-    def mutate_birds(self) -> None:
-        """
-        Mutate all Birds.
-        """
-        for _bird in self._population._population:
-            _bird._nn.mutate(self._shift_vals)

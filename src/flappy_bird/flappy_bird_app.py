@@ -2,8 +2,7 @@ from __future__ import annotations
 
 from typing import cast
 
-from flappy_bird.flappy_bird_ga import FlappyBirdGA
-from flappy_bird.objects.bird import Bird
+from flappy_bird.ga.bird_ga import FlappyBirdGA
 from flappy_bird.objects.pipe import Pipe
 from flappy_bird.pg.app import App
 
@@ -38,14 +37,14 @@ class FlappyBirdApp(App):
         return self._ga._lifetime * self._fps
 
     @property
-    def closest_pipe(self) -> Pipe:
+    def closest_pipe(self) -> Pipe | None:
         """
         Determine which Pipe is closest to and in front of the Birds.
 
         Returns:
             closest (Pipe): Pipe closest to the Birds
         """
-        _dist = self._width
+        _dist = float(self._width)
         closest = None
 
         for _pipe in self._pipes:
@@ -72,12 +71,7 @@ class FlappyBirdApp(App):
         Returns:
             fba (FlappyBirdApp): Flappy Bird application
         """
-        Bird.X_LIM = width
-        Bird.Y_LIM = height
-        Pipe.X_LIM = width
-        Pipe.Y_LIM = height
-        fba = cast(FlappyBirdApp, super().create_app(name, width, height, fps, font, font_size))
-        return fba
+        return cast(FlappyBirdApp, super().create_app(name, width, height, fps, font, font_size))
 
     def _write_stats(self) -> None:
         """
@@ -96,7 +90,7 @@ class FlappyBirdApp(App):
         Parameters:
             speed (float): Pipe speed
         """
-        self._pipes.append(Pipe(speed))
+        self._pipes.append(Pipe(self._width, self._height, speed))
         self._current_pipes += 1
 
     def add_ga(
@@ -108,9 +102,8 @@ class FlappyBirdApp(App):
         bird_y: int,
         bird_size: int,
         hidden_layer_sizes: list[int],
-        weights_range: list[float],
-        bias_range: list[float],
-        shift_vals: float,
+        weights_range: tuple[float, float],
+        bias_range: tuple[float, float],
     ) -> None:
         """
         Add genetic algorithm to app.
@@ -123,9 +116,8 @@ class FlappyBirdApp(App):
             bird_y (int): y coordinate of Bird's start position
             bird_size (int): Size of Bird
             hidden_layer_sizes (list[int]): Neural network hidden layer sizes
-            weights_range (list[float]): Range for random weights
-            bias_range (list[float]): Range for random bias
-            shift_vals (float): Values to shift weights and biases by
+            weights_range (tuple[float, float]): Range for random weights
+            bias_range (tuple[float, float]): Range for random bias
         """
         self._bird_x = bird_x
         self._ga = FlappyBirdGA.create(
@@ -134,11 +126,12 @@ class FlappyBirdApp(App):
             lifetime,
             bird_x,
             bird_y,
+            self._width,
+            self._height,
             bird_size,
             hidden_layer_sizes,
             weights_range,
             bias_range,
-            shift_vals,
         )
 
     def update(self) -> None:
@@ -148,7 +141,6 @@ class FlappyBirdApp(App):
         if self._game_counter == self.max_count or self._ga.num_alive == 0:
             self._ga._analyse()
             self._ga._evolve()
-            self._ga.mutate_birds()
             self._ga.reset()
             self._game_counter = 0
             self._pipes = []
@@ -165,7 +157,7 @@ class FlappyBirdApp(App):
             _pipe.update()
             _pipe.draw(self.screen)
 
-        for _bird in self._ga._population._population:
+        for _bird in self._ga._population._members:
             _bird.update(self.closest_pipe)
             _bird.draw(self.screen)
 

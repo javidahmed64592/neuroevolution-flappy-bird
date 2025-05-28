@@ -29,6 +29,5 @@ if __name__ == "__main__":
         hidden_layer_sizes=ga_config["hidden_layer_sizes"],
         weights_range=ga_config["weights_range"],
         bias_range=ga_config["bias_range"],
-        shift_vals=ga_config["shift_vals"],
     )
     fba.run()
