@@ -2,19 +2,15 @@ from __future__ import annotations
 
 import numpy as np
 import pygame
-from genetic_algorithm.ga import Member
-from neural_network.layer import HiddenLayer, InputLayer, OutputLayer
-from neural_network.math.activation_functions import LinearActivation, ReluActivation
-from neural_network.math.matrix import Matrix
-from neural_network.neural_network import NeuralNetwork
 from numpy.typing import NDArray
 
+from flappy_bird.ga.bird_member import BirdMember
 from flappy_bird.objects.pipe import Pipe
 
 rng = np.random.default_rng()
 
 
-class Bird(Member):
+class Bird(BirdMember):
     """
     This class creates a Bird object which has a starting x and y position and a size.
 
@@ -52,7 +48,7 @@ class Bird(Member):
             weights_range (tuple[float, float]): Range for random weights
             bias_range (tuple[float, float]): Range for random biases
         """
-        super().__init__()
+        super().__init__(hidden_layer_sizes, weights_range, bias_range)
         self._x = x
         self._y = y
         self._start_y = y
@@ -60,32 +56,8 @@ class Bird(Member):
         self._size = size
         self._closest_pipe: Pipe | None = None
 
-        self._hidden_layer_sizes = hidden_layer_sizes
-        self._weights_range = weights_range
-        self._bias_range = bias_range
-        self._nn: NeuralNetwork = None
-
-        self._score = 0
         self._alive = True
         self._colour = rng.integers(low=0, high=256, size=3)
-
-    @property
-    def neural_network(self) -> NeuralNetwork:
-        if not self._nn:
-            input_layer = InputLayer(size=len(self.nn_input), activation=LinearActivation)
-            hidden_layers = [
-                HiddenLayer(
-                    size=size, activation=ReluActivation, weights_range=self._weights_range, bias_range=self._bias_range
-                )
-                for size in self._hidden_layer_sizes
-            ]
-            output_layer = OutputLayer(
-                size=2, activation=LinearActivation, weights_range=self._weights_range, bias_range=self._bias_range
-            )
-
-            self._nn = NeuralNetwork.from_layers(layers=[input_layer, *hidden_layers, output_layer])
-
-        return self._nn
 
     @property
     def nn_input(self) -> NDArray:
@@ -95,19 +67,6 @@ class Bird(Member):
             _nn_input[3] = self._closest_pipe._bottom_height / self.Y_LIM
             _nn_input[4] = self._closest_pipe._x / self.X_LIM
         return _nn_input
-
-    @property
-    def chromosome(self) -> list[list[Matrix]]:
-        return [self.neural_network.weights, self.neural_network.bias]
-
-    @chromosome.setter
-    def chromosome(self, new_chromosome: list[list[Matrix]]) -> None:
-        self.neural_network.weights = new_chromosome[0]
-        self.neural_network.bias = new_chromosome[1]
-
-    @property
-    def fitness(self) -> int:
-        return self._score**2
 
     @property
     def rect(self) -> pygame.Rect:
@@ -149,37 +108,6 @@ class Bird(Member):
         """
         self.velocity += self.GRAV
         self._y += self.velocity
-
-    def crossover(self, parent_a: Bird, parent_b: Bird, mutation_rate: int) -> None:
-        """
-        Crossover the chromosomes of two Birds to create a new chromosome.
-
-        Parameters:
-            parent_a (Member): Used to construct new chromosome
-            parent_b (Member): Used to construct new chromosome
-            mutation_rate (int): Probability for mutations to occur
-        """
-
-        def crossover_genes(
-            element: float, other_element: float, roll: float, random_range: tuple[float, float]
-        ) -> float:
-            if roll < mutation_rate:
-                return rng.uniform(low=random_range[0], high=random_range[1])
-
-            return float(rng.choice([element, other_element], p=[0.5, 0.5]))
-
-        def crossover_weights(element: float, other_element: float, roll: float) -> float:
-            return crossover_genes(element, other_element, roll, self._weights_range)
-
-        def crossover_biases(element: float, other_element: float, roll: float) -> float:
-            return crossover_genes(element, other_element, roll, self._bias_range)
-
-        self._new_chromosome = self.neural_network.crossover(
-            parent_a.neural_network,
-            parent_b.neural_network,
-            crossover_weights,
-            crossover_biases,
-        )
 
     def reset(self) -> None:
         """
