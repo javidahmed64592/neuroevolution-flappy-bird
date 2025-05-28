@@ -164,13 +164,13 @@ class Bird(Member):
             if roll < mutation_rate:
                 return rng.uniform(low=self._weights_range[0], high=self._weights_range[1])
 
-            return rng.choice([element, other_element], p=[0.5, 0.5])
+            return float(rng.choice([element, other_element], p=[0.5, 0.5]))
 
         def crossover_biases(element: float, other_element: float, roll: float) -> float:
             if roll < mutation_rate:
                 return rng.uniform(low=self._bias_range[0], high=self._bias_range[1])
 
-            return rng.choice([element, other_element], p=[0.5, 0.5])
+            return float(rng.choice([element, other_element], p=[0.5, 0.5]))
 
         self._new_chromosome = self.neural_network.crossover(
             parent_a.neural_network,
