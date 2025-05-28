@@ -58,7 +58,7 @@ class Bird(Member):
         self._start_y = y
         self._velocity = 0
         self._size = size
-        self._closest_pipe: Pipe = None
+        self._closest_pipe: Pipe | None = None
 
         self._hidden_layer_sizes = hidden_layer_sizes
         self._weights_range = weights_range

@@ -44,8 +44,8 @@ class FlappyBirdGA(GeneticAlgorithm):
         y: int,
         size: int,
         hidden_layer_sizes: list[int],
-        weights_range: list[float],
-        bias_range: list[float],
+        weights_range: tuple[float, float],
+        bias_range: tuple[float, float],
         shift_vals: float,
     ) -> FlappyBirdGA:
         """
@@ -59,8 +59,8 @@ class FlappyBirdGA(GeneticAlgorithm):
             y (int): y coordinate of Bird's start position
             size (int): Size of Bird
             hidden_layer_sizes (list[int]): Neural network hidden layer sizes
-            weights_range (list[float]): Range for random weights
-            bias_range (list[float]): Range for random bias
+            weights_range (tuple[float, float]): Range for random weights
+            bias_range (tuple[float, float]): Range for random bias
             shift_vals (float): Values to shift weights and biases by
 
         Returns:

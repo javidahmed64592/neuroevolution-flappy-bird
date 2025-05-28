@@ -139,6 +139,8 @@ pretty = true
 [[tool.mypy.overrides]]
 module = [
     "flappy_bird.*",
+    "neural_network.*",
+    "genetic_algorithm.*",
     "numpy.*",
 ]
 ignore_missing_imports = true
