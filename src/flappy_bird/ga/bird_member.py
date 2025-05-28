@@ -13,15 +13,10 @@ rng = np.random.default_rng()
 
 class BirdMember(Member):
     """
-    TODO: UPDATE THIS DOCSTRING
-    This class creates a Bird object which has a starting x and y position and a size.
+    This class creates a Member for the genetic algorithm.
 
-    The Bird is drawn to the display in the draw() method. The update() method performs physics calculations and updates
-    the Bird's position, velocity, and alive state accordingly. The Bird dies if it collides with a pipe.
-
-    The Bird is assigned a neural network which acts as its brain and determines when the Bird should 'jump' based on
-    its current position and the position of the nearest pipe. This brain evolves via crossover and mutations. Its
-    fitness value is the square of its score which is incremented by 1 each time the update() method is called.
+    The bird is assigned a neural network which acts as its brain and determines when the bird should 'jump'.
+    This brain evolves via crossover and mutations.
     """
 
     def __init__(
@@ -31,12 +26,9 @@ class BirdMember(Member):
         bias_range: tuple[float, float],
     ) -> None:
         """
-        Initialise Bird with a starting position, a width and a height.
+        Initialise BirdMember with a starting position, a width and a height.
 
         Parameters:
-            x (int): x coordinate of Bird's start position
-            y (int): y coordinate of Bird's start position
-            size (int): Size of Bird
             hidden_layer_sizes (list[int]): Neural network hidden layer sizes
             weights_range (tuple[float, float]): Range for random weights
             bias_range (tuple[float, float]): Range for random biases
@@ -86,7 +78,7 @@ class BirdMember(Member):
 
     def crossover(self, parent_a: BirdMember, parent_b: BirdMember, mutation_rate: int) -> None:
         """
-        Crossover the chromosomes of two Birds to create a new chromosome.
+        Crossover the chromosomes of two birds to create a new chromosome.
 
         Parameters:
             parent_a (BirdMember): Used to construct new chromosome
