@@ -83,17 +83,17 @@ class Bird(Member):
                 size=2, activation=LinearActivation, weights_range=self._weights_range, bias_range=self._bias_range
             )
 
-            self._nn = NeuralNetwork(layers=[input_layer, *hidden_layers, output_layer])
+            self._nn = NeuralNetwork.from_layers(layers=[input_layer, *hidden_layers, output_layer])
 
         return self._nn
 
     @property
     def nn_input(self) -> NDArray:
-        _nn_input = np.array([self.velocity / self.MIN_VELOCITY, 0, 0, 0])
+        _nn_input = np.array([self._y / self.Y_LIM, self.velocity / self.MIN_VELOCITY, 0, 0, 0])
         if self._closest_pipe:
-            _nn_input[1] = (self._y - self._closest_pipe._top_height) / self.Y_LIM
-            _nn_input[2] = (self._y - self._closest_pipe._bottom_height) / self.Y_LIM
-            _nn_input[3] = (self._x - self._closest_pipe._x) / self.X_LIM
+            _nn_input[2] = self._closest_pipe._top_height / self.Y_LIM
+            _nn_input[3] = self._closest_pipe._bottom_height / self.Y_LIM
+            _nn_input[4] = self._closest_pipe._x / self.X_LIM
         return np.expand_dims(_nn_input, axis=1)
 
     @property

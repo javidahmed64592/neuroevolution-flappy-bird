@@ -1,23 +1,22 @@
 {
-    "app": {
-        "name": "Flappy Bird",
-        "width": 500,
-        "height": 800,
-        "fps": 60,
-        "font": "freesansbold.ttf",
-        "font_size": 24
-    },
+  "app": {
+    "name": "Flappy Bird",
+    "width": 500,
+    "height": 800,
+    "fps": 60,
+    "font": "freesansbold.ttf",
+    "font_size": 24
+  },
 
-    "genetic_algorithm": {
-        "population_size": 200,
-        "mutation_rate": 0.03,
-        "lifetime": 100,
-        "bird_x": 40,
-        "bird_y": 250,
-        "bird_size": 40,
-        "hidden_layer_sizes": [3],
-        "weights_range": [-1, 1],
-        "bias_range": [-0.3, 0.3],
-        "shift_vals": 0
-    }
+  "genetic_algorithm": {
+    "population_size": 200,
+    "mutation_rate": 0.03,
+    "lifetime": 100,
+    "bird_x": 40,
+    "bird_y": 250,
+    "bird_size": 40,
+    "hidden_layer_sizes": [3],
+    "weights_range": [-1, 1],
+    "bias_range": [-0.3, 0.3]
+  }
 }
