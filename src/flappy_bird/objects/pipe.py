@@ -33,7 +33,7 @@ class Pipe:
         Parameters:
             speed (float): Pipe movement speed
         """
-        self._x = x_lim
+        self._x: float = x_lim
         self._top_height = rng.uniform(low=Pipe.SPACING, high=(y_lim - (2 * Pipe.SPACING)))
         self._bottom_height = y_lim - self._top_height + Pipe.SPACING
         self._speed = speed
@@ -54,7 +54,7 @@ class Pipe:
 
     @property
     def offscreen(self) -> bool:
-        return self._x < -Pipe.WIDTH
+        return self._x <= -Pipe.WIDTH
 
     @property
     def normalised_speed(self) -> float:
