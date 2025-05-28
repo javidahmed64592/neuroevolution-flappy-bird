@@ -82,14 +82,14 @@ class BirdMember(Member):
 
         return float(rng.choice([element, other_element], p=[0.5, 0.5]))
 
-    def crossover(self, parent_a: BirdMember, parent_b: BirdMember, mutation_rate: int) -> None:
+    def crossover(self, parent_a: BirdMember, parent_b: BirdMember, mutation_rate: float) -> None:
         """
         Crossover the chromosomes of two birds to create a new chromosome.
 
         Parameters:
             parent_a (BirdMember): Used to construct new chromosome
             parent_b (BirdMember): Used to construct new chromosome
-            mutation_rate (int): Probability for mutations to occur
+            mutation_rate (float): Probability for mutations to occur
         """
 
         def crossover_weights(element: float, other_element: float, roll: float) -> float:
