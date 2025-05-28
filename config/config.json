@@ -15,7 +15,7 @@
     "bird_x": 40,
     "bird_y": 250,
     "bird_size": 40,
-    "hidden_layer_sizes": [3],
+    "hidden_layer_sizes": [4, 3],
     "weights_range": [-1, 1],
     "bias_range": [-0.3, 0.3]
   }
