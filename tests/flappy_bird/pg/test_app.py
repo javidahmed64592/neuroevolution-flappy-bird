@@ -107,8 +107,8 @@ class TestApp:
         mock_y = 100
         mock_rendered_text = MagicMock()
 
-        configured_app._pg_font.render = MagicMock(return_value=mock_rendered_text)
-        configured_app._display_surf.blit = MagicMock()
+        configured_app._pg_font.render = MagicMock(return_value=mock_rendered_text)  # type: ignore[method-assign]
+        configured_app._display_surf.blit = MagicMock()  # type: ignore[method-assign]
 
         configured_app.write_text(mock_text, mock_x, mock_y)
 
@@ -116,7 +116,7 @@ class TestApp:
         configured_app._display_surf.blit.assert_called_once_with(mock_rendered_text, (mock_x, mock_y))
 
     def test_update(self, configured_app: App) -> None:
-        configured_app.write_text = MagicMock()
+        configured_app.write_text = MagicMock()  # type: ignore[method-assign]
         configured_app._clock = MagicMock()
         configured_app._clock.get_fps.return_value = MOCK_FPS
 

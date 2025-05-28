@@ -219,7 +219,7 @@ class TestFlappyBirdApp:
         assert configured_app._current_pipes == 1
 
     def test_write_stats(self, configured_app: FlappyBirdApp) -> None:
-        configured_app.write_text = MagicMock()
+        configured_app.write_text = MagicMock()  # type: ignore[method-assign]
         configured_app._game_counter = 120  # 2 seconds at 60 FPS
 
         configured_app._write_stats()
@@ -243,9 +243,9 @@ class TestFlappyBirdApp:
         # Mock methods
         configured_app._ga._analyse = MagicMock()
         configured_app._ga._evolve = MagicMock()
-        configured_app._ga.reset = MagicMock()
+        configured_app._ga.reset = MagicMock()  # type: ignore[method-assign]
         configured_app._ga._evaluate = MagicMock()
-        configured_app._write_stats = MagicMock()
+        configured_app._write_stats = MagicMock()  # type: ignore[method-assign]
 
         configured_app.update()
 
@@ -259,14 +259,14 @@ class TestFlappyBirdApp:
         assert configured_app._pipe_counter == 1
 
     def test_update_game_reset_no_alive(self, configured_app: FlappyBirdApp, mock_pygame_draw_rect: MagicMock) -> None:
-        configured_app._ga.num_alive = 0
+        configured_app._ga.num_alive = 0  # type: ignore[misc]
 
         # Mock methods
         configured_app._ga._analyse = MagicMock()
         configured_app._ga._evolve = MagicMock()
-        configured_app._ga.reset = MagicMock()
+        configured_app._ga.reset = MagicMock()  # type: ignore[method-assign]
         configured_app._ga._evaluate = MagicMock()
-        configured_app._write_stats = MagicMock()
+        configured_app._write_stats = MagicMock()  # type: ignore[method-assign]
 
         configured_app.update()
 
@@ -281,7 +281,7 @@ class TestFlappyBirdApp:
         # Setup normal game state
         start_counter = 50
         configured_app._game_counter = start_counter
-        configured_app._ga.num_alive = 5
+        configured_app._ga.num_alive = 5  # type: ignore[misc]
 
         # Mock pipe spawning
         mock_pipe.get_spawn_time.return_value = 60
@@ -296,7 +296,7 @@ class TestFlappyBirdApp:
 
         # Mock methods
         configured_app._ga._evaluate = MagicMock()
-        configured_app._write_stats = MagicMock()
+        configured_app._write_stats = MagicMock()  # type: ignore[method-assign]
 
         # Mock closest_pipe property
         mock_closest_pipe = MagicMock()
@@ -330,7 +330,7 @@ class TestFlappyBirdApp:
 
         # Mock methods
         configured_app._ga._evaluate = MagicMock()
-        configured_app._write_stats = MagicMock()
+        configured_app._write_stats = MagicMock()  # type: ignore[method-assign]
 
         configured_app.update()
 
