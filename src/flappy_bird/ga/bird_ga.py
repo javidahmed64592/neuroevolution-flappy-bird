@@ -39,6 +39,8 @@ class FlappyBirdGA(GeneticAlgorithm):
         lifetime: int,
         x: int,
         y: int,
+        x_lim: int,
+        y_lim: int,
         size: int,
         hidden_layer_sizes: list[int],
         weights_range: tuple[float, float],
@@ -53,6 +55,8 @@ class FlappyBirdGA(GeneticAlgorithm):
             lifetime (int): Time of each generation in seconds
             x (int): x coordinate of Bird's start position
             y (int): y coordinate of Bird's start position
+            x_lim (int): Screen width
+            y_lim (int): Screen height
             size (int): Size of Bird
             hidden_layer_sizes (list[int]): Neural network hidden layer sizes
             weights_range (tuple[float, float]): Range for random weights
@@ -62,7 +66,10 @@ class FlappyBirdGA(GeneticAlgorithm):
             flappy_bird (FlappyBirdGA): Flappy Bird app
         """
         flappy_bird = cls(
-            [Bird(x, y, size, hidden_layer_sizes, weights_range, bias_range) for _ in range(population_size)],
+            [
+                Bird(x, y, x_lim, y_lim, size, hidden_layer_sizes, weights_range, bias_range)
+                for _ in range(population_size)
+            ],
             mutation_rate,
         )
         flappy_bird._lifetime = lifetime

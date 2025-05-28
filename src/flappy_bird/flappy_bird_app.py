@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import cast
 
 from flappy_bird.ga.bird_ga import FlappyBirdGA
-from flappy_bird.objects.bird import Bird
 from flappy_bird.objects.pipe import Pipe
 from flappy_bird.pg.app import App
 
@@ -72,10 +71,6 @@ class FlappyBirdApp(App):
         Returns:
             fba (FlappyBirdApp): Flappy Bird application
         """
-        Bird.X_LIM = width
-        Bird.Y_LIM = height
-        Pipe.X_LIM = width
-        Pipe.Y_LIM = height
         return cast(FlappyBirdApp, super().create_app(name, width, height, fps, font, font_size))
 
     def _write_stats(self) -> None:
@@ -95,7 +90,7 @@ class FlappyBirdApp(App):
         Parameters:
             speed (float): Pipe speed
         """
-        self._pipes.append(Pipe(speed))
+        self._pipes.append(Pipe(self._width, self._height, speed))
         self._current_pipes += 1
 
     def add_ga(
@@ -131,6 +126,8 @@ class FlappyBirdApp(App):
             lifetime,
             bird_x,
             bird_y,
+            self._width,
+            self._height,
             bird_size,
             hidden_layer_sizes,
             weights_range,

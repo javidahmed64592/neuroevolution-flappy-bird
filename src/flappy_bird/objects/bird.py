@@ -25,13 +25,13 @@ class Bird(BirdMember):
     GRAV = 1
     LIFT = -25
     MIN_VELOCITY = -15
-    X_LIM = 1000
-    Y_LIM = 1000
 
     def __init__(
         self,
         x: int,
         y: int,
+        x_lim: int,
+        y_lim: int,
         size: int,
         hidden_layer_sizes: list[int],
         weights_range: tuple[float, float],
@@ -43,6 +43,8 @@ class Bird(BirdMember):
         Parameters:
             x (int): x coordinate of Bird's start position
             y (int): y coordinate of Bird's start position
+            x_lim (int): Screen width
+            y_lim (int): Screen height
             size (int): Size of Bird
             hidden_layer_sizes (list[int]): Neural network hidden layer sizes
             weights_range (tuple[float, float]): Range for random weights
@@ -50,6 +52,8 @@ class Bird(BirdMember):
         """
         self._x = x
         self._y = y
+        self._x_lim = x_lim
+        self._y_lim = y_lim
         self._start_y = y
         self._velocity = 0
         self._size = size
@@ -61,11 +65,11 @@ class Bird(BirdMember):
 
     @property
     def nn_input(self) -> NDArray:
-        _nn_input = np.array([self._y / self.Y_LIM, self.velocity / self.MIN_VELOCITY, 0, 0, 0])
+        _nn_input = np.array([self._y / self._y_lim, self.velocity / self.MIN_VELOCITY, 0, 0, 0])
         if self._closest_pipe:
-            _nn_input[2] = self._closest_pipe._top_height / self.Y_LIM
-            _nn_input[3] = self._closest_pipe._bottom_height / self.Y_LIM
-            _nn_input[4] = self._closest_pipe._x / self.X_LIM
+            _nn_input[2] = self._closest_pipe._top_height / self._y_lim
+            _nn_input[3] = self._closest_pipe._bottom_height / self._y_lim
+            _nn_input[4] = self._closest_pipe._x / self._x_lim
         return _nn_input
 
     @property
@@ -82,7 +86,7 @@ class Bird(BirdMember):
 
     @property
     def offscreen(self) -> bool:
-        return (0 > self._y) or (self._y + self._size > self.Y_LIM)
+        return (0 > self._y) or (self._y + self._size > self._y_lim)
 
     @property
     def collide_with_closest_pipe(self) -> bool:
