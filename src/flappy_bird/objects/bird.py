@@ -48,7 +48,6 @@ class Bird(BirdMember):
             weights_range (tuple[float, float]): Range for random weights
             bias_range (tuple[float, float]): Range for random biases
         """
-        super().__init__(hidden_layer_sizes, weights_range, bias_range)
         self._x = x
         self._y = y
         self._start_y = y
@@ -58,6 +57,7 @@ class Bird(BirdMember):
 
         self._alive = True
         self._colour = rng.integers(low=0, high=256, size=3)
+        super().__init__(hidden_layer_sizes, weights_range, bias_range)
 
     @property
     def nn_input(self) -> NDArray:
@@ -140,7 +140,7 @@ class Bird(BirdMember):
             return
 
         self._closest_pipe = closest_pipe
-        output = self.neural_network.feedforward(self.nn_input)
+        output = self._nn.feedforward(self.nn_input)
 
         if output[0] < output[1]:
             self._jump()

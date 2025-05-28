@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 from genetic_algorithm.ga import Member
-from neural_network.layer import HiddenLayer, InputLayer, OutputLayer
+from neural_network.layer import HiddenLayer, InputLayer, Layer, OutputLayer
 from neural_network.math.activation_functions import LinearActivation, ReluActivation
 from neural_network.math.matrix import Matrix
 from neural_network.neural_network import NeuralNetwork
@@ -38,26 +38,23 @@ class BirdMember(Member):
         self._hidden_layer_sizes = hidden_layer_sizes
         self._weights_range = weights_range
         self._bias_range = bias_range
-        self._nn: NeuralNetwork = None
+        self._nn = NeuralNetwork.from_layers(layers=self.nn_layers)
         self._score = 0
 
     @property
-    def neural_network(self) -> NeuralNetwork:
-        if not self._nn:
-            input_layer = InputLayer(size=len(self.nn_input), activation=LinearActivation)
-            hidden_layers = [
-                HiddenLayer(
-                    size=size, activation=ReluActivation, weights_range=self._weights_range, bias_range=self._bias_range
-                )
-                for size in self._hidden_layer_sizes
-            ]
-            output_layer = OutputLayer(
-                size=2, activation=LinearActivation, weights_range=self._weights_range, bias_range=self._bias_range
+    def nn_layers(self) -> list[Layer]:
+        input_layer = InputLayer(size=len(self.nn_input), activation=LinearActivation)
+        hidden_layers = [
+            HiddenLayer(
+                size=size, activation=ReluActivation, weights_range=self._weights_range, bias_range=self._bias_range
             )
+            for size in self._hidden_layer_sizes
+        ]
+        output_layer = OutputLayer(
+            size=2, activation=LinearActivation, weights_range=self._weights_range, bias_range=self._bias_range
+        )
 
-            self._nn = NeuralNetwork.from_layers(layers=[input_layer, *hidden_layers, output_layer])
-
-        return self._nn
+        return [input_layer, *hidden_layers, output_layer]
 
     @property
     def nn_input(self) -> NDArray:
@@ -65,12 +62,12 @@ class BirdMember(Member):
 
     @property
     def chromosome(self) -> list[list[Matrix]]:
-        return [self.neural_network.weights, self.neural_network.bias]
+        return [self._nn.weights, self._nn.bias]
 
     @chromosome.setter
     def chromosome(self, new_chromosome: list[list[Matrix]]) -> None:
-        self.neural_network.weights = new_chromosome[0]
-        self.neural_network.bias = new_chromosome[1]
+        self._nn.weights = new_chromosome[0]
+        self._nn.bias = new_chromosome[1]
 
     @property
     def fitness(self) -> int:
@@ -101,8 +98,8 @@ class BirdMember(Member):
             return crossover_genes(element, other_element, roll, self._bias_range)
 
         self._new_chromosome = NeuralNetwork.crossover(
-            parent_a.neural_network,
-            parent_b.neural_network,
+            parent_a._nn,
+            parent_b._nn,
             crossover_weights,
             crossover_biases,
         )
