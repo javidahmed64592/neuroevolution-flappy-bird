@@ -6,16 +6,6 @@
 # Neuroevolution: Flappy Bird
 A Pygame simulation of Flappy Bird, played by AI trained using neuroevolution.
 
-Install this package using `pip`:
-
-    pip install -e git+https://github.com/javidahmed64592/neuroevolution-flappy-bird#egg=neuroevolution_flappy_bird
-
-To update the package:
-
-    pip update -e git+https://github.com/javidahmed64592/neuroevolution-flappy-bird#egg=neuroevolution_flappy_bird
-
-_Note: It is recommended to install this into a virtual environment._
-
 <!-- omit from toc -->
 ## Table of Contents
 
