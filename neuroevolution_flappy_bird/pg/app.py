@@ -5,15 +5,13 @@ from pygame.locals import QUIT
 
 
 class App:
-    """
-    This class can be used to create a Pygame application.
+    """This class can be used to create a Pygame application.
 
     Override the `update()` method and optionally the `run()` method to create a specific app.
     """
 
     def __init__(self, name: str, width: int, height: int, fps: int, font: str, font_size: int) -> None:
-        """
-        Initialise App and set parameters.
+        """Initialise App and set parameters.
 
         Parameters:
             name (str): App name
@@ -33,8 +31,7 @@ class App:
 
     @classmethod
     def create_app(cls, name: str, width: int, height: int, fps: int, font: str, font_size: int) -> App:
-        """
-        Create application using app config.
+        """Create application using app config.
 
         Parameters:
             name (str): App name
@@ -57,8 +54,7 @@ class App:
         return self._display_surf
 
     def _configure(self) -> None:
-        """
-        Configure Pygame application.
+        """Configure Pygame application.
         """
         pygame.display.set_caption(self._name)
         self._display_surf = pygame.display.set_mode((self._width, self._height))
@@ -66,8 +62,7 @@ class App:
         self._clock = pygame.time.Clock()
 
     def write_text(self, text: str, x: float, y: float) -> None:
-        """
-        Write text to the screen at the given position.
+        """Write text to the screen at the given position.
 
         Parameters:
             text (str): Text to write
@@ -78,8 +73,7 @@ class App:
         self._display_surf.blit(_text, (x, y))
 
     def update(self) -> None:
-        """
-        Display application information to screen.
+        """Display application information to screen.
         """
         _start_x = 50
         _start_y = 50
@@ -92,8 +86,7 @@ class App:
         self.write_text(f"FPS: {self._clock.get_fps()}", _start_x, _start_y * 9)
 
     def run(self) -> None:
-        """
-        Run the application and handle events.
+        """Run the application and handle events.
         """
         self._running = True
         while self._running:

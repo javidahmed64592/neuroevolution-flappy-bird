@@ -3,12 +3,11 @@ from __future__ import annotations
 import numpy as np
 from genetic_algorithm.ga import GeneticAlgorithm
 
-from flappy_bird.objects.bird import Bird
+from neuroevolution_flappy_bird.objects.bird import Bird
 
 
 class FlappyBirdGA(GeneticAlgorithm):
-    """
-    Genetic algorithm for Flappy Bird training.
+    """Genetic algorithm for Flappy Bird training.
     """
 
     def __init__(
@@ -16,8 +15,7 @@ class FlappyBirdGA(GeneticAlgorithm):
         birds: list[Bird],
         mutation_rate: float,
     ) -> None:
-        """
-        Initialise FlappyBirdGA with a mutation rate.
+        """Initialise FlappyBirdGA with a mutation rate.
 
         Parameters:
             birds (list[Bird]): Population of Birds
@@ -46,8 +44,7 @@ class FlappyBirdGA(GeneticAlgorithm):
         weights_range: tuple[float, float],
         bias_range: tuple[float, float],
     ) -> FlappyBirdGA:
-        """
-        Create genetic algorithm and configure neural network.
+        """Create genetic algorithm and configure neural network.
 
         Parameters:
             population_size (int): Number of Birds in population
@@ -76,8 +73,7 @@ class FlappyBirdGA(GeneticAlgorithm):
         return flappy_bird
 
     def reset(self) -> None:
-        """
-        Reset all Birds.
+        """Reset all Birds.
         """
         for _bird in self._population._members:
             _bird.reset()

@@ -2,19 +2,17 @@ from __future__ import annotations
 
 from typing import cast
 
-from flappy_bird.ga.bird_ga import FlappyBirdGA
-from flappy_bird.objects.pipe import Pipe
-from flappy_bird.pg.app import App
+from neuroevolution_flappy_bird.ga.bird_ga import FlappyBirdGA
+from neuroevolution_flappy_bird.objects.pipe import Pipe
+from neuroevolution_flappy_bird.pg.app import App
 
 
 class FlappyBirdApp(App):
-    """
-    This class creates a version of Flappy Bird and uses neuroevolution to train AI to play the game.
+    """This class creates a version of Flappy Bird and uses neuroevolution to train AI to play the game.
     """
 
     def __init__(self, name: str, width: int, height: int, fps: int, font: str, font_size: int) -> None:
-        """
-        Initialise FlappyBirdApp.
+        """Initialise FlappyBirdApp.
 
         Parameters:
             name (str): App name
@@ -38,8 +36,7 @@ class FlappyBirdApp(App):
 
     @property
     def closest_pipe(self) -> Pipe | None:
-        """
-        Determine which Pipe is closest to and in front of the Birds.
+        """Determine which Pipe is closest to and in front of the Birds.
 
         Returns:
             closest (Pipe): Pipe closest to the Birds
@@ -57,8 +54,7 @@ class FlappyBirdApp(App):
 
     @classmethod
     def create_game(cls, name: str, width: int, height: int, fps: int, font: str, font_size: int) -> FlappyBirdApp:
-        """
-        Create App and configure limits for Bird and genetic algorithm.
+        """Create App and configure limits for Bird and genetic algorithm.
 
         Parameters:
             name (str): Application name
@@ -74,8 +70,7 @@ class FlappyBirdApp(App):
         return cast(FlappyBirdApp, super().create_app(name, width, height, fps, font, font_size))
 
     def _write_stats(self) -> None:
-        """
-        Write algorithm statistics to screen.
+        """Write algorithm statistics to screen.
         """
         _start_x = 20
         _start_y = 30
@@ -84,8 +79,7 @@ class FlappyBirdApp(App):
         self.write_text(f"Score: {int(self._game_counter / self._fps)}", _start_x, _start_y * 4)
 
     def _add_pipe(self, speed: float) -> None:
-        """
-        Spawn a new Pipe with a given speed.
+        """Spawn a new Pipe with a given speed.
 
         Parameters:
             speed (float): Pipe speed
@@ -105,8 +99,7 @@ class FlappyBirdApp(App):
         weights_range: tuple[float, float],
         bias_range: tuple[float, float],
     ) -> None:
-        """
-        Add genetic algorithm to app.
+        """Add genetic algorithm to app.
 
         Parameters:
             population_size (int): Number of members in population
@@ -135,8 +128,7 @@ class FlappyBirdApp(App):
         )
 
     def update(self) -> None:
-        """
-        Run genetic algorithm, update Birds and draw to screen.
+        """Run genetic algorithm, update Birds and draw to screen.
         """
         if self._game_counter == self.max_count or self._ga.num_alive == 0:
             self._ga._analyse()

@@ -55,7 +55,7 @@ class TestFlappyBirdGA:
             bird._alive = False
         assert bird_ga.num_alive == 0
 
-    @patch("flappy_bird.ga.bird_ga.Bird")
+    @patch("neuroevolution_flappy_bird.ga.bird_ga.Bird")
     def test_create(self, mock_bird_class: MagicMock, mock_birds: list[MagicMock]) -> None:
         mock_bird_class.side_effect = mock_birds
 

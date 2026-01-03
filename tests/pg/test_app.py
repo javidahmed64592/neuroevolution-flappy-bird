@@ -26,25 +26,25 @@ def app() -> App:
 
 
 @pytest.fixture
-def mock_display_set_mode() -> Generator[MagicMock, None, None]:
+def mock_display_set_mode() -> Generator[MagicMock]:
     with patch("pygame.display.set_mode", return_value=MagicMock()) as mock:
         yield mock
 
 
 @pytest.fixture
-def mock_display_set_caption() -> Generator[MagicMock, None, None]:
+def mock_display_set_caption() -> Generator[MagicMock]:
     with patch("pygame.display.set_caption") as mock:
         yield mock
 
 
 @pytest.fixture
-def mock_sys_font() -> Generator[MagicMock, None, None]:
+def mock_sys_font() -> Generator[MagicMock]:
     with patch("pygame.font.SysFont", return_value=MagicMock()) as mock:
         yield mock
 
 
 @pytest.fixture
-def mock_pygame_init() -> Generator[MagicMock, None, None]:
+def mock_pygame_init() -> Generator[MagicMock]:
     with patch("pygame.init") as mock:
         yield mock
 

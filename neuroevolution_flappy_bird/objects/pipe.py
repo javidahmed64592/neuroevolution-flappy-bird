@@ -7,8 +7,7 @@ rng = np.random.default_rng()
 
 
 class Pipe:
-    """
-    This class creates a Pipe which has a width, a spacing and a speed at which to travel across the screen.
+    """This class creates a Pipe which has a width, a spacing and a speed at which to travel across the screen.
 
     The Pipe is drawn to the display in the draw() method. The update() method moves the Pipe along the screen.
 
@@ -27,8 +26,7 @@ class Pipe:
     COLOUR: ClassVar = [0, 200, 0]
 
     def __init__(self, x_lim: int, y_lim: int, speed: float) -> None:
-        """
-        Initialise Pipe with speed to move across the screen.
+        """Initialise Pipe with speed to move across the screen.
 
         Parameters:
             speed (float): Pipe movement speed
@@ -61,8 +59,7 @@ class Pipe:
         return self._speed / Pipe.MAX_SPEED
 
     def draw(self, screen: pygame.Surface) -> None:
-        """
-        Draw Pipe on the display.
+        """Draw Pipe on the display.
 
         Parameters:
             screen (Surface): Screen to draw Pipe to
@@ -73,8 +70,7 @@ class Pipe:
         pygame.draw.rect(screen, Pipe.COLOUR, self.rects[1])
 
     def update(self) -> None:
-        """
-        Move Pipe.
+        """Move Pipe.
         """
         if self.offscreen:
             return
@@ -82,8 +78,7 @@ class Pipe:
 
     @staticmethod
     def get_speed(pipes_spawned: int) -> float:
-        """
-        Get speed for Pipe based on how many have spawned in current generation.
+        """Get speed for Pipe based on how many have spawned in current generation.
 
         Parameters:
             pipes_spawned (int): Number of Pipes spawned in current generation
@@ -95,8 +90,7 @@ class Pipe:
 
     @staticmethod
     def get_spawn_time(pipes_spawned: int) -> float:
-        """
-        Get time for Pipe to spawn based on how many have spawned in current generation.
+        """Get time for Pipe to spawn based on how many have spawned in current generation.
 
         Parameters:
             pipes_spawned (int): Number of Pipes spawned in current generation

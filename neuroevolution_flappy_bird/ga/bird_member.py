@@ -12,8 +12,7 @@ rng = np.random.default_rng()
 
 
 class BirdMember(Member):
-    """
-    This class creates a Member for the genetic algorithm.
+    """This class creates a Member for the genetic algorithm.
 
     The bird is assigned a neural network which acts as its brain and determines when the bird should 'jump'.
     This brain evolves via crossover and mutations.
@@ -25,8 +24,7 @@ class BirdMember(Member):
         weights_range: tuple[float, float],
         bias_range: tuple[float, float],
     ) -> None:
-        """
-        Initialise BirdMember with a starting position, a width and a height.
+        """Initialise BirdMember with a starting position, a width and a height.
 
         Parameters:
             hidden_layer_sizes (list[int]): Neural network hidden layer sizes
@@ -83,8 +81,7 @@ class BirdMember(Member):
         return float(rng.choice([element, other_element], p=[0.5, 0.5]))
 
     def crossover(self, parent_a: BirdMember, parent_b: BirdMember, mutation_rate: float) -> None:
-        """
-        Crossover the chromosomes of two birds to create a new chromosome.
+        """Crossover the chromosomes of two birds to create a new chromosome.
 
         Parameters:
             parent_a (BirdMember): Used to construct new chromosome

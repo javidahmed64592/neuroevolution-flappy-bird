@@ -35,37 +35,37 @@ def app() -> FlappyBirdApp:
 
 
 @pytest.fixture
-def mock_flappy_bird_ga() -> Generator[MagicMock, None, None]:
-    with patch("flappy_bird.flappy_bird_app.FlappyBirdGA") as mock:
+def mock_flappy_bird_ga() -> Generator[MagicMock]:
+    with patch("neuroevolution_flappy_bird.flappy_bird_app.FlappyBirdGA") as mock:
         yield mock
 
 
 @pytest.fixture
-def mock_pipe() -> Generator[MagicMock, None, None]:
-    with patch("flappy_bird.flappy_bird_app.Pipe") as mock:
+def mock_pipe() -> Generator[MagicMock]:
+    with patch("neuroevolution_flappy_bird.flappy_bird_app.Pipe") as mock:
         yield mock
 
 
 @pytest.fixture
-def mock_display_set_mode() -> Generator[MagicMock, None, None]:
+def mock_display_set_mode() -> Generator[MagicMock]:
     with patch("pygame.display.set_mode", return_value=MagicMock()) as mock:
         yield mock
 
 
 @pytest.fixture
-def mock_sys_font() -> Generator[MagicMock, None, None]:
+def mock_sys_font() -> Generator[MagicMock]:
     with patch("pygame.font.SysFont", return_value=MagicMock()) as mock:
         yield mock
 
 
 @pytest.fixture
-def mock_pygame_init() -> Generator[MagicMock, None, None]:
+def mock_pygame_init() -> Generator[MagicMock]:
     with patch("pygame.init") as mock:
         yield mock
 
 
 @pytest.fixture
-def mock_pygame_draw_rect() -> Generator[MagicMock, None, None]:
+def mock_pygame_draw_rect() -> Generator[MagicMock]:
     with patch("pygame.draw.rect") as mock:
         yield mock
 

@@ -39,31 +39,31 @@ def pipe() -> Pipe:
 
 
 @pytest.fixture
-def mock_no_collision() -> Generator[None, None, None]:
-    with patch("flappy_bird.objects.bird.Bird.rect_collision", return_value=False):
+def mock_no_collision() -> Generator[None]:
+    with patch("neuroevolution_flappy_bird.objects.bird.Bird.rect_collision", return_value=False):
         yield
 
 
 @pytest.fixture
-def mock_collision() -> Generator[None, None, None]:
-    with patch("flappy_bird.objects.bird.Bird.rect_collision", return_value=True):
+def mock_collision() -> Generator[None]:
+    with patch("neuroevolution_flappy_bird.objects.bird.Bird.rect_collision", return_value=True):
         yield
 
 
 @pytest.fixture
-def mock_not_offscreen() -> Generator[None, None, None]:
-    with patch("flappy_bird.objects.bird.Bird.offscreen", property(lambda self: False)):
+def mock_not_offscreen() -> Generator[None]:
+    with patch("neuroevolution_flappy_bird.objects.bird.Bird.offscreen", property(lambda self: False)):
         yield
 
 
 @pytest.fixture
-def mock_nn_jump() -> Generator[None, None, None]:
+def mock_nn_jump() -> Generator[None]:
     with patch("neural_network.neural_network.NeuralNetwork.feedforward", return_value=np.array([0.0, 1.0])):
         yield
 
 
 @pytest.fixture
-def mock_nn_no_jump() -> Generator[None, None, None]:
+def mock_nn_no_jump() -> Generator[None]:
     with patch("neural_network.neural_network.NeuralNetwork.feedforward", return_value=np.array([1.0, 0.0])):
         yield
 

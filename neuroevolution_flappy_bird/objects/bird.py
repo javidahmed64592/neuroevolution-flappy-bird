@@ -4,15 +4,14 @@ import numpy as np
 import pygame
 from numpy.typing import NDArray
 
-from flappy_bird.ga.bird_member import BirdMember
-from flappy_bird.objects.pipe import Pipe
+from neuroevolution_flappy_bird.ga.bird_member import BirdMember
+from neuroevolution_flappy_bird.objects.pipe import Pipe
 
 rng = np.random.default_rng()
 
 
 class Bird(BirdMember):
-    """
-    This class creates a Bird object which has a starting x and y position and a size.
+    """This class creates a Bird object which has a starting x and y position and a size.
 
     The Bird is drawn to the display in the draw() method. The update() method performs physics calculations and updates
     the Bird's position, velocity, and alive state accordingly. The Bird dies if it collides with a pipe.
@@ -37,8 +36,7 @@ class Bird(BirdMember):
         weights_range: tuple[float, float],
         bias_range: tuple[float, float],
     ) -> None:
-        """
-        Initialise Bird with a starting position, a width and a height.
+        """Initialise Bird with a starting position, a width and a height.
 
         Parameters:
             x (int): x coordinate of Bird's start position
@@ -90,8 +88,7 @@ class Bird(BirdMember):
 
     @property
     def collide_with_closest_pipe(self) -> bool:
-        """
-        Check if Bird is colliding with closest Pipe.
+        """Check if Bird is colliding with closest Pipe.
 
         Returns:
             (bool): Is Bird colliding with Pipe?
@@ -102,8 +99,7 @@ class Bird(BirdMember):
 
     @staticmethod
     def rect_collision(bird_rect: pygame.Rect, pipe_rects: list[pygame.Rect]) -> bool:
-        """
-        Check if Bird collides with any Pipe.
+        """Check if Bird collides with any Pipe.
 
         Parameters:
             bird_rect (Rect): Bird's rectangle
@@ -115,21 +111,18 @@ class Bird(BirdMember):
         return any(bird_rect.colliderect(pipe_rect) for pipe_rect in pipe_rects)
 
     def _jump(self) -> None:
-        """
-        Make Bird 'jump' by accelerating upwards.
+        """Make Bird 'jump' by accelerating upwards.
         """
         self.velocity += self.LIFT
 
     def _move(self) -> None:
-        """
-        Update Bird's position and velocity.
+        """Update Bird's position and velocity.
         """
         self.velocity += self.GRAV
         self._y += self.velocity
 
     def reset(self) -> None:
-        """
-        Reset to start positions.
+        """Reset to start positions.
         """
         self.velocity = 0
         self._y = self._start_y
@@ -137,8 +130,7 @@ class Bird(BirdMember):
         self._alive = True
 
     def draw(self, screen: pygame.Surface) -> None:
-        """
-        Draw Bird on the display.
+        """Draw Bird on the display.
 
         Parameters:
             screen (Surface): Screen to draw Bird to
@@ -148,8 +140,7 @@ class Bird(BirdMember):
         pygame.draw.rect(screen, self._colour.tolist(), self.rect)
 
     def update(self, closest_pipe: Pipe) -> None:
-        """
-        Use neural network to determine whether or not Bird should jump, and kill if it collides with a Pipe.
+        """Use neural network to determine whether or not Bird should jump, and kill if it collides with a Pipe.
 
         Parameters:
             closest_pipe (Pipe): Pipe closest to Bird
