@@ -1,42 +1,48 @@
 [build-system]
-# Minimum requirements for the build system to execute.
-# PEP 508 specifications.
-requires = ["setuptools>=61.0", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
 name = "neuroevolution-flappy-bird"
 version = "0.1.0"
 description = "A Pygame implementation of training AI to play Flappy Bird using neuroevolution."
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 license = { file = "LICENSE" }
 authors = [
     { name = "Javid Ahmed", email = "javidahmed@icloud.com" }
 ]
 classifiers = [
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "License :: OSI Approved :: MIT License",
 ]
 dependencies = [
-    "pygame",
-    "neural-network@git+https://github.com/javidahmed64592/neural-network",
-    "genetic-algorithm@git+https://github.com/javidahmed64592/genetic-algorithm",
+    "neural-network @ git+https://github.com/javidahmed64592/neural-network",
+    "genetic-algorithm @ git+https://github.com/javidahmed64592/genetic-algorithm",
+    "pygame>=2.6.1",
 ]
 
 [project.optional-dependencies]
 dev = [
-    "ipykernel",
-    "ruff",
-    "mypy",
-    "pytest",
-    "pytest-cov",
-    "tomli",
+    "template-python[dev] @ git+https://github.com/javidahmed64592/template-python.git",
 ]
 
 [project.urls]
-repository = "https://https://github.com/javidahmed64592/neuroevolution-flappy-bird-v2"
+repository = "https://github.com/javidahmed64592/neuroevolution-flappy-bird-v2"
+
+[project.scripts]
+flappy-bird = "neuroevolution_flappy_bird.main:run"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build]
+include = [
+  "neuroevolution_flappy_bird/**",
+  "LICENSE",
+  "README.md",
+]
 
 [tool.pytest.ini_options]
 addopts = [
@@ -46,8 +52,17 @@ addopts = [
     "term-missing",
 ]
 
+[tool.coverage.run]
+branch = true
+source = ["neuroevolution_flappy_bird", "tests"]
+
+[tool.coverage.report]
+fail_under = 80
+skip_covered = false
+show_missing = true
+
 [tool.ruff]
-target-version = "py312"
+target-version = "py313"
 line-length = 120
 indent-width = 4
 
@@ -79,6 +94,10 @@ exclude = [
     "venv",
 ]
 
+extend-exclude = [
+    "**/__init__.py",
+]
+
 [tool.ruff.lint]
 select = [
     "A",
@@ -86,6 +105,7 @@ select = [
     "ASYNC",
     "B",
     "C4",
+    "D",
     "E",
     "EM",
     "F",
@@ -109,6 +129,8 @@ select = [
     "YTT",
 ]
 ignore = [
+    "D203",
+    "D213",
     "PLR0913",
     "S101"
 ]
@@ -126,6 +148,9 @@ indent-style = "space"
 skip-magic-trailing-comma = false
 line-ending = "auto"
 
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
 [tool.mypy]
 warn_unused_configs = true
 disallow_incomplete_defs = true
@@ -138,9 +163,8 @@ pretty = true
 
 [[tool.mypy.overrides]]
 module = [
-    "flappy_bird.*",
+    "neuroevolution_flappy_bird.*",
     "neural_network.*",
     "genetic_algorithm.*",
-    "numpy.*",
 ]
 ignore_missing_imports = true
