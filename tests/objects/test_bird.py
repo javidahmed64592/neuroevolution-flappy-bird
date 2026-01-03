@@ -4,8 +4,8 @@ from unittest.mock import MagicMock, patch
 import numpy as np
 import pytest
 
-from flappy_bird.objects.bird import Bird
-from flappy_bird.objects.pipe import Pipe
+from neuroevolution_flappy_bird.objects.bird import Bird
+from neuroevolution_flappy_bird.objects.pipe import Pipe
 
 MOCK_X = 100
 MOCK_Y = 400

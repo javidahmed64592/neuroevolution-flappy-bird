@@ -1,6 +1,6 @@
 import json
 
-from flappy_bird.flappy_bird_app import FlappyBirdApp
+from neuroevolution_flappy_bird.flappy_bird_app import FlappyBirdApp
 
 CONFIG_FILEPATH = "./config/config.json"
 

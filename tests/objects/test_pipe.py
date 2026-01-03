@@ -2,7 +2,7 @@ from unittest.mock import call, patch
 
 import pytest
 
-from flappy_bird.objects.pipe import Pipe
+from neuroevolution_flappy_bird.objects.pipe import Pipe
 
 MOCK_WIDTH = 1000
 MOCK_HEIGHT = 1000

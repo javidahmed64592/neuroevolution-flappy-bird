@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 from neural_network.neural_network import NeuralNetwork
 
-from flappy_bird.ga.bird_member import BirdMember
+from neuroevolution_flappy_bird.ga.bird_member import BirdMember
 
 rng = np.random.default_rng()
 

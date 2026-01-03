@@ -2,8 +2,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from flappy_bird.ga.bird_ga import FlappyBirdGA
-from flappy_bird.objects.bird import Bird
+from neuroevolution_flappy_bird.ga.bird_ga import FlappyBirdGA
+from neuroevolution_flappy_bird.objects.bird import Bird
 
 MOCK_POPULATION_SIZE = 5
 MOCK_MUTATION_RATE = 0.1

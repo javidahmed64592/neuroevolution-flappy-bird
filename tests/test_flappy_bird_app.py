@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, PropertyMock, patch
 
 import pytest
 
-from flappy_bird.flappy_bird_app import FlappyBirdApp
+from neuroevolution_flappy_bird.flappy_bird_app import FlappyBirdApp
 
 MOCK_NAME = "Flappy Bird"
 MOCK_WIDTH = 800
