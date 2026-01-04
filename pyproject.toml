@@ -29,7 +29,7 @@ dev = [
 ]
 
 [project.urls]
-repository = "https://github.com/javidahmed64592/neuroevolution-flappy-bird-v2"
+repository = "https://github.com/javidahmed64592/neuroevolution-flappy-bird"
 
 [project.scripts]
 flappy-bird = "neuroevolution_flappy_bird.main:run"
