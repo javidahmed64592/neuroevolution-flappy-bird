@@ -1,3 +1,5 @@
+"""Pygame application base class."""
+
 from __future__ import annotations
 
 import pygame
@@ -5,23 +7,20 @@ from pygame.locals import QUIT
 
 
 class App:
-    """
-    This class can be used to create a Pygame application.
+    """This class can be used to create a Pygame application.
 
     Override the `update()` method and optionally the `run()` method to create a specific app.
     """
 
     def __init__(self, name: str, width: int, height: int, fps: int, font: str, font_size: int) -> None:
-        """
-        Initialise App and set parameters.
+        """Initialise App and set parameters.
 
-        Parameters:
-            name (str): App name
-            width (int): Screen width
-            height (int): Screen height
-            fps (int): Game FPS
-            font (str): Font style
-            font_size (int): Font size
+        :param str name: App name
+        :param int width: Screen width
+        :param int height: Screen height
+        :param int fps: Game FPS
+        :param str font: Font style
+        :param int font_size: Font size
         """
         self._name = name
         self._width = width
@@ -33,19 +32,15 @@ class App:
 
     @classmethod
     def create_app(cls, name: str, width: int, height: int, fps: int, font: str, font_size: int) -> App:
-        """
-        Create application using app config.
+        """Create application using app config.
 
-        Parameters:
-            name (str): App name
-            width (int): Screen width
-            height (int): Screen height
-            fps (int): Game FPS
-            font (str): Font style
-            font_size (int): Font size
-
-        Returns:
-            app (App): App with screen, clock, and font set.
+        :param str name: App name
+        :param int width: Screen width
+        :param int height: Screen height
+        :param int fps: Game FPS
+        :param str font: Font style
+        :param int font_size: Font size
+        :return App: Pygame application
         """
         pygame.init()
         app = cls(name, width, height, fps, font, font_size)
@@ -54,33 +49,28 @@ class App:
 
     @property
     def screen(self) -> pygame.Surface:
+        """Get the Pygame display surface."""
         return self._display_surf
 
     def _configure(self) -> None:
-        """
-        Configure Pygame application.
-        """
+        """Configure Pygame application."""
         pygame.display.set_caption(self._name)
         self._display_surf = pygame.display.set_mode((self._width, self._height))
         self._pg_font = pygame.font.SysFont(self._font, self._font_size)
         self._clock = pygame.time.Clock()
 
     def write_text(self, text: str, x: float, y: float) -> None:
-        """
-        Write text to the screen at the given position.
+        """Write text to the screen at the given position.
 
-        Parameters:
-            text (str): Text to write
-            x (float): x coordinate of text's position
-            y (float): y coordinate of text's position
+        :param str text: Text to write
+        :param float x: x coordinate of text's position
+        :param float y: y coordinate of text's position
         """
         _text = self._pg_font.render(text, 1, (255, 255, 255))
         self._display_surf.blit(_text, (x, y))
 
     def update(self) -> None:
-        """
-        Display application information to screen.
-        """
+        """Display application information to screen."""
         _start_x = 50
         _start_y = 50
         self.write_text("App info:", _start_x, _start_y)
@@ -92,9 +82,7 @@ class App:
         self.write_text(f"FPS: {self._clock.get_fps()}", _start_x, _start_y * 9)
 
     def run(self) -> None:
-        """
-        Run the application and handle events.
-        """
+        """Run the application and handle events."""
         self._running = True
         while self._running:
             for event in pygame.event.get():

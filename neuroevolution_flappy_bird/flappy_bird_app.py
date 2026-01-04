@@ -1,28 +1,26 @@
+"""Flappy Bird application using neuroevolution to train AI to play the game."""
+
 from __future__ import annotations
 
 from typing import cast
 
-from flappy_bird.ga.bird_ga import FlappyBirdGA
-from flappy_bird.objects.pipe import Pipe
-from flappy_bird.pg.app import App
+from neuroevolution_flappy_bird.ga.bird_ga import FlappyBirdGA
+from neuroevolution_flappy_bird.objects.pipe import Pipe
+from neuroevolution_flappy_bird.pg.app import App
 
 
 class FlappyBirdApp(App):
-    """
-    This class creates a version of Flappy Bird and uses neuroevolution to train AI to play the game.
-    """
+    """This class creates a version of Flappy Bird and uses neuroevolution to train AI to play the game."""
 
     def __init__(self, name: str, width: int, height: int, fps: int, font: str, font_size: int) -> None:
-        """
-        Initialise FlappyBirdApp.
+        """Initialise FlappyBirdApp.
 
-        Parameters:
-            name (str): App name
-            width (int): Screen width
-            height (int): Screen height
-            fps (int): Game FPS
-            font (str): Font style
-            font_size (int): Font size
+        :param str name: App name
+        :param int width: Screen width
+        :param int height: Screen height
+        :param int fps: Game FPS
+        :param str font: Font style
+        :param int font_size: Font size
         """
         super().__init__(name, width, height, fps, font, font_size)
         self._ga: FlappyBirdGA
@@ -34,15 +32,14 @@ class FlappyBirdApp(App):
 
     @property
     def max_count(self) -> int:
+        """Maximum game counter value before resetting the generation."""
         return self._ga._lifetime * self._fps
 
     @property
     def closest_pipe(self) -> Pipe | None:
-        """
-        Determine which Pipe is closest to and in front of the Birds.
+        """Determine which Pipe is closest to and in front of the Birds.
 
-        Returns:
-            closest (Pipe): Pipe closest to the Birds
+        :return Pipe | None: Pipe closest to the Birds
         """
         _dist = float(self._width)
         closest = None
@@ -57,26 +54,20 @@ class FlappyBirdApp(App):
 
     @classmethod
     def create_game(cls, name: str, width: int, height: int, fps: int, font: str, font_size: int) -> FlappyBirdApp:
-        """
-        Create App and configure limits for Bird and genetic algorithm.
+        """Create App and configure limits for Bird and genetic algorithm.
 
-        Parameters:
-            name (str): Application name
-            width (int): Screen width
-            height (int): Screen height
-            fps (int): Application FPS
-            font (str): Font style
-            font_size (int): Font size
-
-        Returns:
-            fba (FlappyBirdApp): Flappy Bird application
+        :param str name: Application name
+        :param int width: Screen width
+        :param int height: Screen height
+        :param int fps: Application FPS
+        :param str font: Font style
+        :param int font_size: Font size
+        :return FlappyBirdApp: Flappy Bird application
         """
         return cast(FlappyBirdApp, super().create_app(name, width, height, fps, font, font_size))
 
     def _write_stats(self) -> None:
-        """
-        Write algorithm statistics to screen.
-        """
+        """Write algorithm statistics to screen."""
         _start_x = 20
         _start_y = 30
         self.write_text(f"Generation: {self._ga._generation}", _start_x, _start_y)
@@ -84,11 +75,9 @@ class FlappyBirdApp(App):
         self.write_text(f"Score: {int(self._game_counter / self._fps)}", _start_x, _start_y * 4)
 
     def _add_pipe(self, speed: float) -> None:
-        """
-        Spawn a new Pipe with a given speed.
+        """Spawn a new Pipe with a given speed.
 
-        Parameters:
-            speed (float): Pipe speed
+        :param float speed: Pipe speed
         """
         self._pipes.append(Pipe(self._width, self._height, speed))
         self._current_pipes += 1
@@ -105,19 +94,17 @@ class FlappyBirdApp(App):
         weights_range: tuple[float, float],
         bias_range: tuple[float, float],
     ) -> None:
-        """
-        Add genetic algorithm to app.
+        """Add genetic algorithm to app.
 
-        Parameters:
-            population_size (int): Number of members in population
-            mutation_rate (float): Mutation rate for members
-            lifetime (int): Time of each generation in seconds
-            bird_x (int): x coordinate of Bird's start position
-            bird_y (int): y coordinate of Bird's start position
-            bird_size (int): Size of Bird
-            hidden_layer_sizes (list[int]): Neural network hidden layer sizes
-            weights_range (tuple[float, float]): Range for random weights
-            bias_range (tuple[float, float]): Range for random bias
+        :param int population_size: Number of members in population
+        :param float mutation_rate: Mutation rate for members
+        :param int lifetime: Time of each generation in seconds
+        :param int bird_x: x coordinate of Bird's start position
+        :param int bird_y: y coordinate of Bird's start position
+        :param int bird_size: Size of Bird
+        :param list[int] hidden_layer_sizes: Neural network hidden layer sizes
+        :param tuple[float, float] weights_range: Range for random weights
+        :param tuple[float, float] bias_range: Range for random bias
         """
         self._bird_x = bird_x
         self._ga = FlappyBirdGA.create(
@@ -135,9 +122,7 @@ class FlappyBirdApp(App):
         )
 
     def update(self) -> None:
-        """
-        Run genetic algorithm, update Birds and draw to screen.
-        """
+        """Run genetic algorithm, update Birds and draw to screen."""
         if self._game_counter == self.max_count or self._ga.num_alive == 0:
             self._ga._analyse()
             self._ga._evolve()

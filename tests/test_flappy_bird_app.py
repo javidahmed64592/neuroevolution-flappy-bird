@@ -1,3 +1,5 @@
+"""Unit tests for the neuroevolution_flappy_bird.flappy_bird_app module."""
+
 from collections.abc import Generator
 from unittest.mock import MagicMock, PropertyMock, patch
 
@@ -24,6 +26,7 @@ MOCK_BIAS_RANGE = (-1.0, 1.0)
 
 @pytest.fixture
 def app() -> FlappyBirdApp:
+    """Mock FlappyBirdApp instance."""
     return FlappyBirdApp(
         name=MOCK_NAME,
         width=MOCK_WIDTH,
@@ -35,37 +38,43 @@ def app() -> FlappyBirdApp:
 
 
 @pytest.fixture
-def mock_flappy_bird_ga() -> Generator[MagicMock, None, None]:
-    with patch("flappy_bird.flappy_bird_app.FlappyBirdGA") as mock:
+def mock_flappy_bird_ga() -> Generator[MagicMock]:
+    """Mock FlappyBirdGA class."""
+    with patch("neuroevolution_flappy_bird.flappy_bird_app.FlappyBirdGA") as mock:
         yield mock
 
 
 @pytest.fixture
-def mock_pipe() -> Generator[MagicMock, None, None]:
-    with patch("flappy_bird.flappy_bird_app.Pipe") as mock:
+def mock_pipe() -> Generator[MagicMock]:
+    """Mock Pipe class."""
+    with patch("neuroevolution_flappy_bird.flappy_bird_app.Pipe") as mock:
         yield mock
 
 
 @pytest.fixture
-def mock_display_set_mode() -> Generator[MagicMock, None, None]:
+def mock_display_set_mode() -> Generator[MagicMock]:
+    """Mock pygame.display.set_mode function."""
     with patch("pygame.display.set_mode", return_value=MagicMock()) as mock:
         yield mock
 
 
 @pytest.fixture
-def mock_sys_font() -> Generator[MagicMock, None, None]:
+def mock_sys_font() -> Generator[MagicMock]:
+    """Mock pygame.font.SysFont function."""
     with patch("pygame.font.SysFont", return_value=MagicMock()) as mock:
         yield mock
 
 
 @pytest.fixture
-def mock_pygame_init() -> Generator[MagicMock, None, None]:
+def mock_pygame_init() -> Generator[MagicMock]:
+    """Mock pygame.init function."""
     with patch("pygame.init") as mock:
         yield mock
 
 
 @pytest.fixture
-def mock_pygame_draw_rect() -> Generator[MagicMock, None, None]:
+def mock_pygame_draw_rect() -> Generator[MagicMock]:
+    """Mock pygame.draw.rect function."""
     with patch("pygame.draw.rect") as mock:
         yield mock
 
@@ -74,6 +83,7 @@ def mock_pygame_draw_rect() -> Generator[MagicMock, None, None]:
 def configured_app(
     app: FlappyBirdApp, mock_display_set_mode: MagicMock, mock_sys_font: MagicMock, mock_flappy_bird_ga: MagicMock
 ) -> FlappyBirdApp:
+    """Configured FlappyBirdApp with a mock GA."""
     app._configure()
     app._clock = MagicMock()
 
@@ -101,7 +111,10 @@ def configured_app(
 
 
 class TestFlappyBirdApp:
+    """Unit tests for the FlappyBirdApp class."""
+
     def test_initialization(self, app: FlappyBirdApp) -> None:
+        """Test FlappyBirdApp initialization."""
         assert app._name == MOCK_NAME
         assert app._width == MOCK_WIDTH
         assert app._height == MOCK_HEIGHT
@@ -116,6 +129,7 @@ class TestFlappyBirdApp:
     def test_create_game(
         self, mock_pygame_init: MagicMock, mock_display_set_mode: MagicMock, mock_sys_font: MagicMock
     ) -> None:
+        """Test FlappyBirdApp.create_game class method."""
         app = FlappyBirdApp.create_game(
             name=MOCK_NAME,
             width=MOCK_WIDTH,
@@ -135,13 +149,16 @@ class TestFlappyBirdApp:
         assert app._height == MOCK_HEIGHT
 
     def test_max_count_property(self, configured_app: FlappyBirdApp) -> None:
+        """Test max_count property."""
         expected_max_count = MOCK_LIFETIME * MOCK_FPS
         assert configured_app.max_count == expected_max_count
 
     def test_closest_pipe_no_pipes(self, configured_app: FlappyBirdApp) -> None:
+        """Test closest_pipe property when there are no pipes."""
         assert configured_app.closest_pipe is None
 
     def test_closest_pipe_with_pipes(self, configured_app: FlappyBirdApp, mock_pipe: MagicMock) -> None:
+        """Test closest_pipe property with existing pipes."""
         # Create mock pipes
         mock_pipe1 = MagicMock()
         mock_pipe1._x = 200
@@ -161,6 +178,7 @@ class TestFlappyBirdApp:
         assert closest == mock_pipe1  # Closest pipe in front
 
     def test_closest_pipe_all_behind(self, configured_app: FlappyBirdApp) -> None:
+        """Test closest_pipe property when all pipes are behind the bird."""
         # Create mock pipes all behind the bird
         mock_pipe1 = MagicMock()
         mock_pipe1._x = 20
@@ -175,6 +193,7 @@ class TestFlappyBirdApp:
         assert configured_app.closest_pipe is None
 
     def test_add_ga(self, app: FlappyBirdApp, mock_flappy_bird_ga: MagicMock) -> None:
+        """Test add_ga method."""
         mock_ga_instance = MagicMock()
         mock_flappy_bird_ga.create.return_value = mock_ga_instance
 
@@ -208,6 +227,7 @@ class TestFlappyBirdApp:
         assert app._bird_x == MOCK_BIRD_X
 
     def test_add_pipe(self, configured_app: FlappyBirdApp, mock_pipe: MagicMock) -> None:
+        """Test _add_pipe method."""
         mock_speed = 5.0
         mock_pipe_instance = MagicMock()
         mock_pipe.return_value = mock_pipe_instance
@@ -219,6 +239,7 @@ class TestFlappyBirdApp:
         assert configured_app._current_pipes == 1
 
     def test_write_stats(self, configured_app: FlappyBirdApp) -> None:
+        """Test _write_stats method."""
         configured_app.write_text = MagicMock()  # type: ignore[method-assign]
         configured_app._game_counter = 120  # 2 seconds at 60 FPS
 
@@ -235,6 +256,7 @@ class TestFlappyBirdApp:
             assert calls[i][0][0] == expected_text
 
     def test_update_game_reset_max_count(self, configured_app: FlappyBirdApp, mock_pipe: MagicMock) -> None:
+        """Test update method when max_count is reached."""
         configured_app._game_counter = configured_app.max_count
         configured_app._pipes = [MagicMock()]
         configured_app._current_pipes = 1
@@ -259,6 +281,7 @@ class TestFlappyBirdApp:
         assert configured_app._pipe_counter == 1
 
     def test_update_game_reset_no_alive(self, configured_app: FlappyBirdApp, mock_pygame_draw_rect: MagicMock) -> None:
+        """Test update method when no birds are alive."""
         configured_app._ga.num_alive = 0  # type: ignore[misc]
 
         # Mock methods
@@ -278,6 +301,7 @@ class TestFlappyBirdApp:
     def test_update_normal_gameplay(
         self, configured_app: FlappyBirdApp, mock_pipe: MagicMock, mock_pygame_draw_rect: MagicMock
     ) -> None:
+        """Test update method during normal gameplay."""
         # Setup normal game state
         start_counter = 50
         configured_app._game_counter = start_counter
@@ -319,6 +343,7 @@ class TestFlappyBirdApp:
             assert configured_app._pipe_counter == 1
 
     def test_update_pipe_spawning(self, configured_app: FlappyBirdApp, mock_pipe: MagicMock) -> None:
+        """Test pipe spawning in update method."""
         # Setup for pipe spawning
         configured_app._pipe_counter = 0
         configured_app._current_pipes = 0

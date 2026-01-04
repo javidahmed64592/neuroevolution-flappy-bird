@@ -1,3 +1,5 @@
+"""Main module to run the Flappy Bird neuroevolution application."""
+
 import json
 
 from neuroevolution_flappy_bird.flappy_bird_app import FlappyBirdApp
@@ -5,7 +7,8 @@ from neuroevolution_flappy_bird.flappy_bird_app import FlappyBirdApp
 CONFIG_FILEPATH = "./config/config.json"
 
 
-if __name__ == "__main__":
+def run() -> None:
+    """Run the Flappy Bird neuroevolution simulation."""
     with open(CONFIG_FILEPATH) as config_file:
         config = json.load(config_file)
     app_config = config["app"]
