@@ -1,3 +1,5 @@
+"""Bird Member for the genetic algorithm."""
+
 from __future__ import annotations
 
 import numpy as np
@@ -26,10 +28,9 @@ class BirdMember(Member):
     ) -> None:
         """Initialise BirdMember with a starting position, a width and a height.
 
-        Parameters:
-            hidden_layer_sizes (list[int]): Neural network hidden layer sizes
-            weights_range (tuple[float, float]): Range for random weights
-            bias_range (tuple[float, float]): Range for random biases
+        :param list[int] hidden_layer_sizes: Neural network hidden layer sizes
+        :param tuple[float, float] weights_range: Range for random weights
+        :param tuple[float, float] bias_range: Range for random biases
         """
         super().__init__()
 
@@ -41,6 +42,7 @@ class BirdMember(Member):
 
     @property
     def nn_layers(self) -> list[Layer]:
+        """Get neural network layers for BirdMember."""
         input_layer = InputLayer(size=len(self.nn_input), activation=LinearActivation)
         hidden_layers = [
             HiddenLayer(
@@ -56,10 +58,12 @@ class BirdMember(Member):
 
     @property
     def nn_input(self) -> NDArray:
+        """Get neural network input for BirdMember."""
         return np.zeros(5)
 
     @property
     def chromosome(self) -> tuple[list[Matrix], list[Matrix]]:
+        """Get BirdMember's chromosome."""
         return self._nn.weights, self._nn.bias
 
     @chromosome.setter
@@ -69,12 +73,22 @@ class BirdMember(Member):
 
     @property
     def fitness(self) -> int:
+        """Get BirdMember's fitness value."""
         return self._score**2
 
     @staticmethod
     def crossover_genes(
         element: float, other_element: float, roll: float, mutation_rate: float, random_range: tuple[float, float]
     ) -> float:
+        """Crossover two genes with a chance of mutation.
+
+        :param float element: Gene from parent A
+        :param float other_element: Gene from parent B
+        :param float roll: Random roll between 0 and 1
+        :param float mutation_rate: Probability for mutations to occur
+        :param tuple[float, float] random_range: Range for random gene if mutation occurs
+        :return float: New gene after crossover and possible mutation
+        """
         if roll < mutation_rate:
             return rng.uniform(low=random_range[0], high=random_range[1])
 
@@ -83,10 +97,9 @@ class BirdMember(Member):
     def crossover(self, parent_a: BirdMember, parent_b: BirdMember, mutation_rate: float) -> None:
         """Crossover the chromosomes of two birds to create a new chromosome.
 
-        Parameters:
-            parent_a (BirdMember): Used to construct new chromosome
-            parent_b (BirdMember): Used to construct new chromosome
-            mutation_rate (float): Probability for mutations to occur
+        :param BirdMember parent_a: Used to construct new chromosome
+        :param BirdMember parent_b: Used to construct new chromosome
+        :param float mutation_rate: Probability for mutations to occur
         """
 
         def crossover_weights(element: float, other_element: float, roll: float) -> float:

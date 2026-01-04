@@ -1,3 +1,5 @@
+"""Genetic algorithm for Flappy Bird training."""
+
 from __future__ import annotations
 
 import numpy as np
@@ -7,8 +9,7 @@ from neuroevolution_flappy_bird.objects.bird import Bird
 
 
 class FlappyBirdGA(GeneticAlgorithm):
-    """Genetic algorithm for Flappy Bird training.
-    """
+    """Genetic algorithm for Flappy Bird training."""
 
     def __init__(
         self,
@@ -17,15 +18,15 @@ class FlappyBirdGA(GeneticAlgorithm):
     ) -> None:
         """Initialise FlappyBirdGA with a mutation rate.
 
-        Parameters:
-            birds (list[Bird]): Population of Birds
-            mutation_rate (float): Population mutation rate
+        :param list[Bird] birds: Population of Birds
+        :param float mutation_rate: Population mutation rate
         """
         super().__init__(birds, mutation_rate)
         self._lifetime: int
 
     @property
     def num_alive(self) -> int:
+        """Get number of alive Birds in population."""
         _alive_array = np.array([_bird._alive for _bird in self._population._members])
         return int(np.sum(_alive_array))
 
@@ -46,21 +47,18 @@ class FlappyBirdGA(GeneticAlgorithm):
     ) -> FlappyBirdGA:
         """Create genetic algorithm and configure neural network.
 
-        Parameters:
-            population_size (int): Number of Birds in population
-            mutation_rate (float): Mutation rate for Birds
-            lifetime (int): Time of each generation in seconds
-            x (int): x coordinate of Bird's start position
-            y (int): y coordinate of Bird's start position
-            x_lim (int): Screen width
-            y_lim (int): Screen height
-            size (int): Size of Bird
-            hidden_layer_sizes (list[int]): Neural network hidden layer sizes
-            weights_range (tuple[float, float]): Range for random weights
-            bias_range (tuple[float, float]): Range for random bias
-
-        Returns:
-            flappy_bird (FlappyBirdGA): Flappy Bird app
+        :param int population_size: Number of Birds in population
+        :param float mutation_rate: Mutation rate for Birds
+        :param int lifetime: Time of each generation in seconds
+        :param int x: x coordinate of Bird's start position
+        :param int y: y coordinate of Bird's start position
+        :param int x_lim: Screen width
+        :param int y_lim: Screen height
+        :param int size: Size of Bird
+        :param list[int] hidden_layer_sizes: Neural network hidden layer sizes
+        :param tuple[float, float] weights_range: Range for random weights
+        :param tuple[float, float] bias_range: Range for random bias
+        :return FlappyBirdGA: Flappy Bird app
         """
         flappy_bird = cls(
             [
@@ -73,7 +71,6 @@ class FlappyBirdGA(GeneticAlgorithm):
         return flappy_bird
 
     def reset(self) -> None:
-        """Reset all Birds.
-        """
+        """Reset all Birds."""
         for _bird in self._population._members:
             _bird.reset()

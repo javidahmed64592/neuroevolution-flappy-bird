@@ -1,3 +1,5 @@
+"""Bird object for Flappy Bird game."""
+
 from __future__ import annotations
 
 import numpy as np
@@ -38,15 +40,14 @@ class Bird(BirdMember):
     ) -> None:
         """Initialise Bird with a starting position, a width and a height.
 
-        Parameters:
-            x (int): x coordinate of Bird's start position
-            y (int): y coordinate of Bird's start position
-            x_lim (int): Screen width
-            y_lim (int): Screen height
-            size (int): Size of Bird
-            hidden_layer_sizes (list[int]): Neural network hidden layer sizes
-            weights_range (tuple[float, float]): Range for random weights
-            bias_range (tuple[float, float]): Range for random biases
+        :param int x: x coordinate of Bird's start position
+        :param int y: y coordinate of Bird's start position
+        :param int x_lim: Screen width
+        :param int y_lim: Screen height
+        :param int size: Size of Bird
+        :param list[int] hidden_layer_sizes: Neural network hidden layer sizes
+        :param tuple[float, float] weights_range: Range for random weights
+        :param tuple[float, float] bias_range: Range for random biases
         """
         self._x = x
         self._y = y
@@ -63,6 +64,7 @@ class Bird(BirdMember):
 
     @property
     def nn_input(self) -> NDArray:
+        """Get neural network input for Bird."""
         _nn_input = np.array([self._y / self._y_lim, self.velocity / self.MIN_VELOCITY, 0, 0, 0])
         if self._closest_pipe:
             _nn_input[2] = self._closest_pipe._top_height / self._y_lim
@@ -72,26 +74,29 @@ class Bird(BirdMember):
 
     @property
     def rect(self) -> pygame.Rect:
+        """Get Bird's rectangle for collision detection."""
         return pygame.Rect(self._x, self._y, self._size, self._size)
 
     @property
     def velocity(self) -> int:
+        """Get Bird's velocity."""
         return self._velocity
 
     @velocity.setter
     def velocity(self, new_velocity: int) -> None:
+        """Set Bird's velocity, ensuring it does not go below MIN_VELOCITY."""
         self._velocity = max(new_velocity, self.MIN_VELOCITY)
 
     @property
     def offscreen(self) -> bool:
+        """Check if Bird is offscreen."""
         return (0 > self._y) or (self._y + self._size > self._y_lim)
 
     @property
     def collide_with_closest_pipe(self) -> bool:
         """Check if Bird is colliding with closest Pipe.
 
-        Returns:
-            (bool): Is Bird colliding with Pipe?
+        :return bool: True if Bird is colliding with closest Pipe
         """
         if not self._closest_pipe:
             return False
@@ -101,29 +106,23 @@ class Bird(BirdMember):
     def rect_collision(bird_rect: pygame.Rect, pipe_rects: list[pygame.Rect]) -> bool:
         """Check if Bird collides with any Pipe.
 
-        Parameters:
-            bird_rect (Rect): Bird's rectangle
-            pipe_rects (list[Rect]): List of Pipe rectangles
-
-        Returns:
-            (bool): Is Bird colliding with Pipe?
+        :param Rect bird_rect: Bird's rectangle
+        :param list[Rect] pipe_rects: List of Pipe rectangles
+        :return bool: True if Bird is colliding with any Pipe
         """
         return any(bird_rect.colliderect(pipe_rect) for pipe_rect in pipe_rects)
 
     def _jump(self) -> None:
-        """Make Bird 'jump' by accelerating upwards.
-        """
+        """Make Bird 'jump' by accelerating upwards."""
         self.velocity += self.LIFT
 
     def _move(self) -> None:
-        """Update Bird's position and velocity.
-        """
+        """Update Bird's position and velocity."""
         self.velocity += self.GRAV
         self._y += self.velocity
 
     def reset(self) -> None:
-        """Reset to start positions.
-        """
+        """Reset to start positions."""
         self.velocity = 0
         self._y = self._start_y
         self._score = 0
@@ -132,8 +131,7 @@ class Bird(BirdMember):
     def draw(self, screen: pygame.Surface) -> None:
         """Draw Bird on the display.
 
-        Parameters:
-            screen (Surface): Screen to draw Bird to
+        :param Surface screen: Screen to draw Bird to
         """
         if not self._alive:
             return
@@ -142,8 +140,7 @@ class Bird(BirdMember):
     def update(self, closest_pipe: Pipe) -> None:
         """Use neural network to determine whether or not Bird should jump, and kill if it collides with a Pipe.
 
-        Parameters:
-            closest_pipe (Pipe): Pipe closest to Bird
+        :param Pipe closest_pipe: Pipe closest to Bird
         """
         if not self._alive:
             return
