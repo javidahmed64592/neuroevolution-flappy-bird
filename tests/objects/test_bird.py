@@ -1,3 +1,5 @@
+"""Unit tests for the neuroevolution_flappy_bird.objects.bird module."""
+
 from collections.abc import Generator
 from unittest.mock import MagicMock, patch
 
@@ -19,6 +21,7 @@ MOCK_BIAS_RANGE = (-1.0, 1.0)
 
 @pytest.fixture
 def bird() -> Bird:
+    """Mock Bird instance."""
     return Bird(
         MOCK_X,
         MOCK_Y,
@@ -33,6 +36,7 @@ def bird() -> Bird:
 
 @pytest.fixture
 def pipe() -> Pipe:
+    """Mock Pipe instance."""
     pipe = Pipe(MOCK_X_LIM, MOCK_Y_LIM, 5)
     pipe._x = MOCK_X
     return pipe
@@ -40,36 +44,44 @@ def pipe() -> Pipe:
 
 @pytest.fixture
 def mock_no_collision() -> Generator[None]:
+    """Mock no collision between Bird and Pipe."""
     with patch("neuroevolution_flappy_bird.objects.bird.Bird.rect_collision", return_value=False):
         yield
 
 
 @pytest.fixture
 def mock_collision() -> Generator[None]:
+    """Mock collision between Bird and Pipe."""
     with patch("neuroevolution_flappy_bird.objects.bird.Bird.rect_collision", return_value=True):
         yield
 
 
 @pytest.fixture
 def mock_not_offscreen() -> Generator[None]:
+    """Mock Bird not being offscreen."""
     with patch("neuroevolution_flappy_bird.objects.bird.Bird.offscreen", property(lambda self: False)):
         yield
 
 
 @pytest.fixture
 def mock_nn_jump() -> Generator[None]:
+    """Mock NeuralNetwork to output jump decision."""
     with patch("neural_network.neural_network.NeuralNetwork.feedforward", return_value=np.array([0.0, 1.0])):
         yield
 
 
 @pytest.fixture
 def mock_nn_no_jump() -> Generator[None]:
+    """Mock NeuralNetwork to output no jump decision."""
     with patch("neural_network.neural_network.NeuralNetwork.feedforward", return_value=np.array([1.0, 0.0])):
         yield
 
 
 class TestBird:
+    """Unit tests for the Bird class."""
+
     def test_initialization(self, bird: Bird) -> None:
+        """Test Bird initialization."""
         assert bird._x == MOCK_X
         assert bird._y == MOCK_Y
         assert bird._x_lim == MOCK_X_LIM
@@ -84,6 +96,7 @@ class TestBird:
         assert bird._bias_range == MOCK_BIAS_RANGE
 
     def test_nn_input(self, bird: Bird, pipe: Pipe) -> None:
+        """Test nn_input property."""
         nn_input = bird.nn_input
         assert nn_input.shape == (5,)
         assert nn_input[0] == MOCK_Y / MOCK_Y_LIM
@@ -101,6 +114,7 @@ class TestBird:
         assert nn_input[4] == pipe._x / MOCK_X_LIM
 
     def test_rect(self, bird: Bird) -> None:
+        """Test rect property."""
         rect = bird.rect
         assert rect.x == MOCK_X
         assert rect.y == MOCK_Y
@@ -108,6 +122,7 @@ class TestBird:
         assert rect.height == MOCK_SIZE
 
     def test_velocity(self, bird: Bird) -> None:
+        """Test velocity property and setter."""
         assert bird.velocity == 0
 
         velocity_below_min = -20
@@ -119,6 +134,7 @@ class TestBird:
         assert bird.velocity == velocity_above_min
 
     def test_offscreen(self, bird: Bird) -> None:
+        """Test offscreen property."""
         # Offscreen above
         bird._y = -1
         assert bird.offscreen
@@ -128,26 +144,31 @@ class TestBird:
         assert bird.offscreen
 
     def test_collide_with_closest_pipe_false(self, bird: Bird, pipe: Pipe, mock_no_collision: MagicMock) -> None:
+        """Test collide_with_closest_pipe property when no collision occurs."""
         # Closest pipe but no collision
         bird._closest_pipe = pipe
         assert not bird.collide_with_closest_pipe
 
     def test_collide_with_closest_pipe_true(self, bird: Bird, pipe: Pipe, mock_collision: MagicMock) -> None:
+        """Test collide_with_closest_pipe property when collision occurs."""
         # Collision with pipe
         bird._closest_pipe = pipe
         assert bird.collide_with_closest_pipe
 
     def test_collide_with_closest_pipe_no_pipe(self, bird: Bird) -> None:
+        """Test collide_with_closest_pipe property when there is no closest pipe."""
         bird._closest_pipe = None
         assert not bird.collide_with_closest_pipe
 
     def test_jump(self, bird: Bird) -> None:
+        """Test _jump method."""
         initial_velocity = 20
         bird.velocity = initial_velocity
         bird._jump()
         assert bird.velocity == initial_velocity + Bird.LIFT
 
     def test_move(self, bird: Bird) -> None:
+        """Test _move method."""
         initial_y = bird._y
         initial_velocity = bird.velocity
         bird._move()
@@ -155,6 +176,7 @@ class TestBird:
         assert bird._y == initial_y + bird.velocity
 
     def test_reset(self, bird: Bird) -> None:
+        """Test reset method."""
         bird.velocity = -10
         bird._y = 100
         bird._score = 50
@@ -167,6 +189,7 @@ class TestBird:
         assert bird._alive is True
 
     def test_draw(self, bird: Bird) -> None:
+        """Test draw method."""
         with patch("pygame.draw.rect") as mock_draw:
             mock_screen = patch("pygame.Surface").start()
             bird.draw(mock_screen)
@@ -186,6 +209,7 @@ class TestBird:
         mock_not_offscreen: MagicMock,
         mock_nn_no_jump: MagicMock,
     ) -> None:
+        """Test update method when Bird is alive and does not jump."""
         initial_y = bird._y
         bird.update(pipe)
         assert bird._closest_pipe == pipe
@@ -201,6 +225,7 @@ class TestBird:
         mock_not_offscreen: MagicMock,
         mock_nn_jump: MagicMock,
     ) -> None:
+        """Test update method when Bird is alive and jumps."""
         initial_y = bird._y
         bird.update(pipe)
         expected_velocity = max(Bird.LIFT, Bird.MIN_VELOCITY) + Bird.GRAV
@@ -210,6 +235,7 @@ class TestBird:
         assert bird._alive is True
 
     def test_update_offscreen_death(self, bird: Bird, pipe: Pipe, mock_nn_no_jump: MagicMock) -> None:
+        """Test update method when Bird goes offscreen and dies."""
         bird._y = -1
         bird.update(pipe)
         assert bird._alive is False
@@ -218,12 +244,14 @@ class TestBird:
     def test_update_collision_death(
         self, bird: Bird, pipe: Pipe, mock_collision: MagicMock, mock_nn_no_jump: MagicMock
     ) -> None:
+        """Test update method when Bird collides with Pipe and dies."""
         bird._closest_pipe = pipe
         bird.update(pipe)
         assert bird._alive is False
         assert bird._score == 0
 
     def test_update_dead_bird(self, bird: Bird, pipe: Pipe) -> None:
+        """Test update method when Bird is already dead."""
         bird._alive = False
         initial_y = bird._y
         initial_score = bird._score

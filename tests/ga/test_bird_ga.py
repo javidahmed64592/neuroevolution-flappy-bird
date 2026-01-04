@@ -1,3 +1,5 @@
+"""Unit tests for the neuroevolution_flappy_bird.ga.bird_ga module."""
+
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -21,6 +23,7 @@ MOCK_NUM_ALIVE = 3
 
 @pytest.fixture
 def mock_birds() -> list[MagicMock]:
+    """Mock list of Bird instances."""
     birds = []
     for i in range(MOCK_POPULATION_SIZE):
         bird = MagicMock(spec=Bird)
@@ -31,18 +34,23 @@ def mock_birds() -> list[MagicMock]:
 
 @pytest.fixture
 def bird_ga(mock_birds: list[MagicMock]) -> FlappyBirdGA:
+    """Mock FlappyBirdGA instance."""
     ga = FlappyBirdGA(mock_birds, MOCK_MUTATION_RATE)
     ga._lifetime = MOCK_LIFETIME
     return ga
 
 
 class TestFlappyBirdGA:
+    """Unit tests for the FlappyBirdGA class."""
+
     def test_initialization(self, bird_ga: FlappyBirdGA, mock_birds: list[MagicMock]) -> None:
+        """Test FlappyBirdGA initialization."""
         assert all(bird_ga._population._members == mock_birds)
         assert bird_ga._mutation_rate == MOCK_MUTATION_RATE
         assert bird_ga._lifetime == MOCK_LIFETIME
 
     def test_num_alive(self, bird_ga: FlappyBirdGA) -> None:
+        """Test num_alive property."""
         assert bird_ga.num_alive == MOCK_NUM_ALIVE
 
         # Test when all birds are alive
@@ -57,6 +65,7 @@ class TestFlappyBirdGA:
 
     @patch("neuroevolution_flappy_bird.ga.bird_ga.Bird")
     def test_create(self, mock_bird_class: MagicMock, mock_birds: list[MagicMock]) -> None:
+        """Test FlappyBirdGA.create class method."""
         mock_bird_class.side_effect = mock_birds
 
         ga = FlappyBirdGA.create(
@@ -82,7 +91,7 @@ class TestFlappyBirdGA:
         # Verify Bird constructor was called correctly
         assert mock_bird_class.call_count == MOCK_POPULATION_SIZE
         for call in mock_bird_class.call_args_list:
-            args, kwargs = call
+            args, _ = call
             assert args == (
                 MOCK_X,
                 MOCK_Y,
@@ -95,6 +104,7 @@ class TestFlappyBirdGA:
             )
 
     def test_reset(self, bird_ga: FlappyBirdGA, mock_birds: list[MagicMock]) -> None:
+        """Test reset method."""
         bird_ga.reset()
 
         # Verify reset was called on each bird
